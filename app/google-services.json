@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "535042362701",
+    "project_id": "dispenser-dc485",
+    "storage_bucket": "dispenser-dc485.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:535042362701:android:5a73f3c36a2c1710c17b04",
+        "android_client_info": {
+          "package_name": "com.example.dispenser"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAmyi38RtRs6J1jckSdiPSIwNIZz58nW74"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

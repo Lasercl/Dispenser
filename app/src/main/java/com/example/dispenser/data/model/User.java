@@ -3,12 +3,13 @@ package com.example.dispenser.data.model;
 /**
  * Data class that captures user information for logged in users retrieved from LoginRepository
  */
-public class LoggedInUser {
+public class User {
 
     private String userId;
+    private String password;
     private String displayName;
 
-    public LoggedInUser(String userId, String displayName) {
+    public User(String userId, String displayName) {
         this.userId = userId;
         this.displayName = displayName;
     }
@@ -19,5 +20,13 @@ public class LoggedInUser {
 
     public String getDisplayName() {
         return displayName;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }
