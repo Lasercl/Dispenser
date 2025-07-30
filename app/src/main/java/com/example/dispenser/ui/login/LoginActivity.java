@@ -5,6 +5,7 @@ import android.app.Activity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -23,9 +24,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.dispenser.R;
-import com.example.dispenser.ui.login.LoginViewModel;
-import com.example.dispenser.ui.login.LoginViewModelFactory;
 import com.example.dispenser.databinding.ActivityLoginBinding;
+import com.example.dispenser.ui.FormState;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -46,10 +46,10 @@ public class LoginActivity extends AppCompatActivity {
         final EditText passwordEditText = binding.password;
         final Button loginButton = binding.login;
         final ProgressBar loadingProgressBar = binding.loading;
-
-        loginViewModel.getLoginFormState().observe(this, new Observer<LoginFormState>() {
+        final TextView registerLinkTextView = binding.registerLoginPage;
+        loginViewModel.getLoginFormState().observe(this, new Observer<FormState>() {
             @Override
-            public void onChanged(@Nullable LoginFormState loginFormState) {
+            public void onChanged(@Nullable FormState loginFormState) {
                 if (loginFormState == null) {
                     return;
                 }
@@ -62,7 +62,6 @@ public class LoginActivity extends AppCompatActivity {
                 }
             }
         });
-
         loginViewModel.getLoginResult().observe(this, new Observer<LoginResult>() {
             @Override
             public void onChanged(@Nullable LoginResult loginResult) {
@@ -122,6 +121,22 @@ public class LoginActivity extends AppCompatActivity {
                         passwordEditText.getText().toString());
             }
         });
+        // === TAMBAHKAN BLOK INI ===
+        registerLinkTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Buat Intent untuk memulai RegisterActivity
+                // Pastikan Anda mengganti com.example.dispenser.ui.register.RegisterActivity
+                // dengan path yang benar ke RegisterActivity Anda.
+                Intent intent = new Intent(LoginActivity.this, com.example.dispenser.ui.register.RegisterActivity.class);
+                startActivity(intent);
+                // Opsional: Anda bisa memanggil finish() di sini jika Anda tidak ingin pengguna
+                // kembali ke LoginActivity setelah mendaftar, tetapi biasanya LoginActivity
+                // tetap terbuka sehingga pengguna bisa login setelah registrasi.
+                // finish();
+            }
+        });
+        // === AKHIR BLOK TAMBAHAN ===
     }
 
     private void updateUiWithUser(LoggedInUserView model) {

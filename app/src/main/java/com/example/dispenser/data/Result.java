@@ -7,7 +7,6 @@ public class Result<T> {
     // hide the private constructor to limit subclass types (Success, Error)
     private Result() {
     }
-
     @Override
     public String toString() {
         if (this instanceof Result.Success) {
