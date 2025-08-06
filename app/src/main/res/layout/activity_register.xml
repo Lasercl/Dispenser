@@ -7,19 +7,27 @@
     android:layout_height="match_parent"
 
     tools:context=".ui.register.RegisterActivity">
-
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scaleType="fitStart"
+        android:adjustViewBounds="true"
+        android:src="@drawable/machine"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
     <EditText
         android:id="@+id/username"
         android:layout_width="289dp"
         android:layout_height="42dp"
-        android:layout_marginTop="564dp"
         android:hint="@string/prompt_email"
         android:inputType="textEmailAddress"
         android:selectAllOnFocus="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.532"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/imageView" />
 
     <EditText
         android:id="@+id/password"
@@ -40,7 +48,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="start"
-        android:layout_marginTop="16dp"
         android:layout_marginBottom="16dp"
         android:enabled="false"
         android:text="@string/signUp"
@@ -55,11 +62,12 @@
         android:layout_height="wrap_content"
         android:focusable="true"
         android:padding="8dp"
-        android:text="don't have account?"
+        android:text="have account?"
         android:textColor="@android:color/black"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@id/loginRegisterPage"
+        app:layout_constraintTop_toBottomOf="@id/register"
         app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintBottom_toBottomOf="parent"/>
     <TextView
@@ -74,8 +82,8 @@
         android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@id/haveAccount"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/haveAccount"
-        app:layout_constraintBottom_toBottomOf="@id/haveAccount"/>
+        app:layout_constraintTop_toBottomOf="@id/register"
+        app:layout_constraintBottom_toBottomOf="parent"/>
     <ProgressBar
         android:id="@+id/loading"
         android:layout_width="wrap_content"
@@ -90,13 +98,6 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.3" />
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="416dp"
-        android:layout_height="554dp"
-        app:srcCompat="@drawable/machine"
-        android:scaleType="fitCenter"
-        tools:layout_editor_absoluteX="5dp"
-        tools:layout_editor_absoluteY="0dp" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
