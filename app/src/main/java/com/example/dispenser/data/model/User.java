@@ -7,19 +7,19 @@ public class User {
 
     private String userId;
     private String password;
-    private String displayName;
+    private String email;
 
-    public User(String userId, String displayName) {
+    public User(String userId, String email) {
         this.userId = userId;
-        this.displayName = displayName;
+        this.email = email;
     }
 
     public String getUserId() {
         return userId;
     }
 
-    public String getDisplayName() {
-        return displayName;
+    public String getEmail() {
+        return email;
     }
 
     public String getPassword() {

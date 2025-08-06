@@ -1,6 +1,9 @@
 package com.example.dispenser.data;
 
+import com.example.dispenser.callback.CallbackLoginRegister;
 import com.example.dispenser.data.model.User;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 /**
  * Class that requests authentication and user information from the remote data source and
@@ -43,20 +46,14 @@ public class AuthRepositoryImpl {
         // @see https://developer.android.com/training/articles/keystore
     }
 
-    public Result<User> login(String username, String password) {
+    public void login(String username, String password, CallbackLoginRegister<Result<User>> callback) {
         // handle login
-        Result<User> result = dataSource.login(username, password);
-        if (result instanceof Result.Success) {
-            setLoggedInUser(((Result.Success<User>) result).getData());
-        }
-        return result;
+       dataSource.login(username, password,callback);
     }
 
-    public Result<User> register(String username, String password) {
-        Result<User> result = dataSource.register(username, password);
-//        if (result instanceof Result.Success) {
-//            setLoggedInUser(((Result.Success<User>) result).getData());
-//        }
-        return result;
+    public void register(String email, String password, CallbackLoginRegister<Result<User>> callback) {
+        dataSource.register(email, password, callback);
     }
+
+
 }
