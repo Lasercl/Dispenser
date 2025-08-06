@@ -36,32 +36,30 @@ public class RegisterViewModel extends ViewModel {
     LiveData<RegisterResult> getregisterResult() {
         return registerResult;
     }
-    public boolean registerBoolean(String username, String password) {
-        // can be launched in a separate asynchronous job
-        Result<User> result = authRepositoryImpl.register(username, password);
-
-        if (result instanceof Result.Success) {
-            User data = ((Result.Success<User>) result).getData();
-            isRegistering = true;
-            registerResult.setValue(new RegisterResult(new RegistedInUserView(data.getDisplayName())));
-        } else {
-            isRegistering=false;
-            registerResult.setValue(new RegisterResult(R.string.register_failed));
-        }
-        return isRegistering;
-    }
+//    public boolean registerBoolean(String username, String password) {
+//        // can be launched in a separate asynchronous job
+//        Result<User> result = authRepositoryImpl.register(username, password);
+//
+//        if (result instanceof Result.Success) {
+//            User data = ((Result.Success<User>) result).getData();
+//            isRegistering = true;
+//            registerResult.setValue(new RegisterResult(new RegistedInUserView(data.getEmail())));
+//        } else {
+//            isRegistering=false;
+//            registerResult.setValue(new RegisterResult(R.string.register_failed));
+//        }
+//        return isRegistering;
+//    }
     public void register(String username, String password) {
         // can be launched in a separate asynchronous job
-        Result<User> result = authRepositoryImpl.register(username, password);
-
-        if (result instanceof Result.Success) {
-            User data = ((Result.Success<User>) result).getData();
-            isRegistering = true;
-            registerResult.setValue(new RegisterResult(new RegistedInUserView(data.getDisplayName())));
-        } else {
-            isRegistering=false;
-            registerResult.setValue(new RegisterResult(R.string.register_failed));
-        }
+        authRepositoryImpl.register(username, password, result -> {
+            if (result instanceof Result.Success) {
+                User data = ((Result.Success<User>) result).getData();
+                registerResult.postValue(new RegisterResult(new RegistedInUserView(data.getEmail())));
+            } else {
+                registerResult.postValue(new RegisterResult(R.string.register_failed));
+            }
+        });
     }
 
     public void registerDataChanged(String username, String password) {
