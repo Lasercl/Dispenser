@@ -77,21 +77,19 @@ public class RegisterActivity extends AppCompatActivity {
                 if (registerResult.getError() != null) {
                     showregisterFailed(registerResult.getError());
                 }
-                if (registerResult.getSuccess() != null) {
-                    updateUiWithUser(registerResult.getSuccess());
-                }
-                setResult(Activity.RESULT_OK);
 
                 //Complete and destroy register activity once successful
                 if (registerResult.getSuccess() != null){
+                    updateUiWithUser(registerResult.getSuccess());
                     Intent intent = new Intent(RegisterActivity.this, LoginActivity.class); // Ganti LoginActivity.class dengan nama Activity login Anda
                     // Opsi: Bersihkan back stack agar pengguna tidak bisa kembali ke halaman registrasi
                     startActivity(intent);
                     Log.d("DEBUG", "onClick: cok");
+                    Toast.makeText(getApplicationContext(), "Registrasi berhasil! Silakan login.", Toast.LENGTH_LONG).show();
                     finish();
                 }else{
                     Log.d("DEBUG", "onClick: cok");
-                    Toast.makeText(getApplicationContext(), "Registrasi berhasil! Silakan login.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "Registrasi gagal! .", Toast.LENGTH_LONG).show();
                 }
             }
         });

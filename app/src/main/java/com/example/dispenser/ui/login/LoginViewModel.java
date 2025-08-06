@@ -11,6 +11,8 @@ import com.example.dispenser.data.Result;
 import com.example.dispenser.data.model.User;
 import com.example.dispenser.R;
 import com.example.dispenser.ui.FormState;
+import com.example.dispenser.ui.register.RegistedInUserView;
+import com.example.dispenser.ui.register.RegisterResult;
 
 public class LoginViewModel extends ViewModel {
 
@@ -32,14 +34,14 @@ public class LoginViewModel extends ViewModel {
 
     public void login(String username, String password) {
         // can be launched in a separate asynchronous job
-        Result<User> result = authRepositoryImpl.login(username, password);
-
-        if (result instanceof Result.Success) {
-            User data = ((Result.Success<User>) result).getData();
-            loginResult.setValue(new LoginResult(new LoggedInUserView(data.getDisplayName())));
-        } else {
-            loginResult.setValue(new LoginResult(R.string.login_failed));
-        }
+        authRepositoryImpl.login(username, password, result -> {
+            if (result instanceof Result.Success) {
+                User data = ((Result.Success<User>) result).getData();
+                loginResult.postValue(new LoginResult(new LoggedInUserView(data.getEmail())));
+            } else {
+                loginResult.postValue(new LoginResult(R.string.login_failed));
+            }
+        });
     }
 
     public void loginDataChanged(String username, String password) {
