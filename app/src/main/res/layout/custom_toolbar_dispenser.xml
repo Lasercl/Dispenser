@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.appbar.AppBarLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:fitsSystemWindows="true"
+    android:theme="@style/ThemeOverlay.MaterialComponents.Dark.ActionBar">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/customToolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@android:color/transparent"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            app:contentInsetStartWithNavigation="0dp">
+
+                <!-- Logo kiri -->
+                <ImageView
+                    android:id="@+id/toolbarLogo"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_gravity="start|center_vertical"
+                    android:src="@drawable/dispensericon"
+                    android:contentDescription="Logo"
+                    android:tint="@android:color/black" />
+
+                <!-- Tombol tambah kanan -->
+                <ImageButton
+                    android:id="@+id/addHome"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:layout_gravity="end|center_vertical"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:src="@drawable/outline_add_24"
+                    android:tint="@android:color/black"
+                    android:contentDescription="Add" />
+
+        </androidx.appcompat.widget.Toolbar>
+</com.google.android.material.appbar.AppBarLayout>
