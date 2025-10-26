@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -26,6 +27,8 @@ import android.widget.Toast;
 import com.example.dispenser.R;
 import com.example.dispenser.databinding.ActivityLoginBinding;
 import com.example.dispenser.ui.FormState;
+import com.example.dispenser.ui.home.HomeActivity;
+import com.example.dispenser.ui.register.RegisterActivity;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -75,8 +78,18 @@ public class LoginActivity extends AppCompatActivity {
                 if (loginResult.getSuccess() != null) {
                     updateUiWithUser(loginResult.getSuccess());
                 }
-                setResult(Activity.RESULT_OK);
-
+                if (loginResult.getSuccess() != null){
+                    updateUiWithUser(loginResult.getSuccess());
+                    Intent intent = new Intent(LoginActivity.this, HomeActivity.class); // Ganti LoginActivity.class dengan nama Activity login Anda
+                    // Opsi: Bersihkan back stack agar pengguna tidak bisa kembali ke halaman registrasi
+                    startActivity(intent);
+                    Log.d("DEBUG", "onClick: cok");
+                    Toast.makeText(getApplicationContext(), "LOGIN berhasil! Silakan login.", Toast.LENGTH_LONG).show();
+                    finish();
+                }else{
+                    Log.d("DEBUG", "onClick: cok");
+                    Toast.makeText(getApplicationContext(), "LOGIN gagal! .", Toast.LENGTH_LONG).show();
+                }
                 //Complete and destroy login activity once successful
                 finish();
             }
