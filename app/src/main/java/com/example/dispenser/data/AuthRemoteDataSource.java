@@ -1,5 +1,6 @@
 package com.example.dispenser.data;
 
+
 import android.util.Log;
 
 import com.example.dispenser.callback.CallbackLoginRegister;
@@ -18,10 +19,20 @@ import java.util.concurrent.atomic.AtomicReference;
  */
 public class AuthRemoteDataSource {
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    FirebaseUser user;
 
     DatabaseReference rootDatabase= FirebaseDatabase.getInstance("https://dispenser-dc485-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference();
     private String username;
 
+    public Boolean isLogged(){
+        if (user!=null){
+            return true;
+        }
+        return false;
+    }
+    public void setLogged(){
+        user=FirebaseAuth.getInstance().getCurrentUser();
+    }
 
     public void login(String email, String password,CallbackLoginRegister<Result<User>> callback) {
         mAuth.signInWithEmailAndPassword(email, password)
