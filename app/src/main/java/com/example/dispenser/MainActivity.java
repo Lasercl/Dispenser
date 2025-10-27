@@ -9,18 +9,28 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.dispenser.data.AuthRemoteDataSource;
+import com.example.dispenser.data.AuthRepositoryImpl;
+import com.example.dispenser.ui.home.HomeActivity;
 import com.example.dispenser.ui.login.LoginActivity;
 import com.example.dispenser.ui.register.RegisterActivity;
 
 public class MainActivity extends AppCompatActivity {
-
+    private AuthRepositoryImpl authRepository=AuthRepositoryImpl.getInstance(new AuthRemoteDataSource());
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
-        Intent intent=new Intent(MainActivity.this, LoginActivity.class);
-        startActivity(intent);
+        authRepository.setLoggedInUser();
+        if(authRepository.isLoggedIn()){
+            Intent intent=new Intent(MainActivity.this, HomeActivity.class);
+            startActivity(intent);
+        }else{
+            Intent intent=new Intent(MainActivity.this, LoginActivity.class);
+            startActivity(intent);
+        }
+
         finish();
     }
 }
