@@ -17,7 +17,6 @@ public class AuthRepositoryImpl {
 
     // If user credentials will be cached in local storage, it is recommended it be encrypted
     // @see https://developer.android.com/training/articles/keystore
-    private User user = null;
 
     // private constructor : singleton access
     private AuthRepositoryImpl(AuthRemoteDataSource dataSource) {
@@ -31,17 +30,16 @@ public class AuthRepositoryImpl {
         return instance;
     }
 
-    public boolean isLoggedIn() {
-        return user != null;
+    public  boolean isLoggedIn() {
+        return dataSource.isLogged();
     }
 
     public void logout() {
-        user = null;
         dataSource.logout();
     }
 
-    private void setLoggedInUser(User user) {
-        this.user = user;
+    public void setLoggedInUser() {
+        dataSource.setLogged();
         // If user credentials will be cached in local storage, it is recommended it be encrypted
         // @see https://developer.android.com/training/articles/keystore
     }
