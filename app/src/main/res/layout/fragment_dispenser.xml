@@ -78,7 +78,11 @@
                     android:src="@drawable/check" />
             </LinearLayout>
 
-            <!-- Info Panel -->
+             Info Panel
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -159,6 +163,8 @@
                     android:textColor="@android:color/black" />
 
             </LinearLayout>
+            </ScrollView>
+
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 </androidx.constraintlayout.widget.ConstraintLayout>
