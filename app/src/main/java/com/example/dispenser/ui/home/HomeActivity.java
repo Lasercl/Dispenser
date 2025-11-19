@@ -14,6 +14,10 @@ import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.ui.AppBarConfiguration;
+import androidx.navigation.ui.NavigationUI;
 
 import com.example.dispenser.R;
 import com.example.dispenser.ui.FragmentDestinationMenu;
@@ -21,6 +25,9 @@ import com.example.dispenser.ui.add_dispenser.list_dispenser;
 import com.example.dispenser.ui.login.LoginActivity;
 import com.example.dispenser.ui.register.RegisterActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import java.util.HashSet;
+import java.util.Set;
 
 public class HomeActivity extends AppCompatActivity {
     private HomeViewModel viewModel;
@@ -41,34 +48,48 @@ public class HomeActivity extends AppCompatActivity {
 //        }
 
         // set listener untuk bottom nav
-        bottomNav.setOnItemSelectedListener(item -> {
-            int id = item.getItemId();
-            if (id == R.id.nav_home) {
-                viewModel.setDestination(FragmentDestinationMenu.HOME);
-                return true;
-            } else if (id == R.id.nav_dispenser) {
-                viewModel.setDestination(FragmentDestinationMenu.DISPENSER);
-                return true;
-            } else if (id == R.id.nav_profile) {
-                viewModel.setDestination(FragmentDestinationMenu.PROFILE);
-                return true;
-            }
-            return false;
-        });
-        viewModel.getCurrentDestination().observe(this, dest -> {
-            if (dest == null) return;
-            switch (dest) {
-                case HOME:
-                    replaceFragment(new HomeFragment());
-                    break;
-                case DISPENSER:
-                    replaceFragment(new DispenserFragment());
-                    break;
-                case PROFILE:
-                    replaceFragment(new ProfileFragment());
-                    break;
-            }
-        });
+//        bottomNav.setOnItemSelectedListener(item -> {
+//            int id = item.getItemId();
+//            if (id == R.id.nav_home) {
+//                viewModel.setDestination(FragmentDestinationMenu.HOME);
+//                return true;
+//            } else if (id == R.id.nav_dispenser) {
+//                viewModel.setDestination(FragmentDestinationMenu.DISPENSER);
+//                return true;
+//            } else if (id == R.id.nav_profile) {
+//                viewModel.setDestination(FragmentDestinationMenu.PROFILE);
+//                return true;
+//            }
+//            return false;
+//        });
+
+        NavController navController = Navigation.findNavController(this, R.id.contentMenu);
+
+        // Set top-level destinations
+        Set<Integer> topLevelDestinations = new HashSet<>();
+        topLevelDestinations.add(R.id.navigation_home);
+        topLevelDestinations.add(R.id.navigation_dispenser);
+        topLevelDestinations.add(R.id.navigation_profile);
+
+        AppBarConfiguration appBarConfiguration =
+                new AppBarConfiguration.Builder(topLevelDestinations).build();
+
+//        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
+        NavigationUI.setupWithNavController(bottomNav, navController);
+//        viewModel.getCurrentDestination().observe(this, dest -> {
+//            if (dest == null) return;
+//            switch (dest) {
+//                case HOME:
+//                    replaceFragment(new HomeFragment());
+//                    break;
+//                case DISPENSER:
+//                    replaceFragment(new DispenserFragment());
+//                    break;
+//                case PROFILE:
+//                    replaceFragment(new ProfileFragment());
+//                    break;
+//            }
+//        });
 
     }
     private void replaceFragment(Fragment fragment) {
