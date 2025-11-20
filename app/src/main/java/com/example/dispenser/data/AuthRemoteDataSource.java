@@ -59,6 +59,7 @@ public class AuthRemoteDataSource {
     }
 
     public void logout() {
+        mAuth.signOut();
         // TODO: revoke authentication
     }
 }
