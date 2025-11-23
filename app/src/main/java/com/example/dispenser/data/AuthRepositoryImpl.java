@@ -43,7 +43,9 @@ public class AuthRepositoryImpl {
         // If user credentials will be cached in local storage, it is recommended it be encrypted
         // @see https://developer.android.com/training/articles/keystore
     }
-
+    public FirebaseUser getUser(){
+        return dataSource.getUser();
+    }
     public void login(String username, String password, CallbackLoginRegister<Result<User>> callback) {
         // handle login
        dataSource.login(username, password,callback);

@@ -21,9 +21,8 @@ public class AuthRemoteDataSource {
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
     FirebaseUser user;
 
-    DatabaseReference rootDatabase= FirebaseDatabase.getInstance("https://dispenser-dc485-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference();
+   private DatabaseReference rootDatabase= FirebaseDatabase.getInstance("https://dispenser-dc485-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference();
     private String username;
-
     public Boolean isLogged(){
         if (user!=null){
             return true;
@@ -33,7 +32,9 @@ public class AuthRemoteDataSource {
     public void setLogged(){
         user=FirebaseAuth.getInstance().getCurrentUser();
     }
-
+    public FirebaseUser getUser(){
+        return user;
+    }
     public void login(String email, String password,CallbackLoginRegister<Result<User>> callback) {
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(task -> {
