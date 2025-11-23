@@ -10,9 +10,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.example.dispenser.MainActivity;
 import com.example.dispenser.R;
+import com.example.dispenser.ui.history.HistoryActivity;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -36,6 +38,14 @@ public class ProfileFragment extends Fragment {
         viewModel = new ViewModelProvider(this).get(ProfileViewModel.class);
 
         Button buttonLogout=root.findViewById(R.id.btnLogout);
+        TextView historyButton=root.findViewById(R.id.btnHistory);
+        historyButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent=new Intent(getActivity(), HistoryActivity.class);
+                startActivity(intent);
+            }
+        });
         buttonLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
