@@ -2,6 +2,9 @@ package com.example.dispenser.ui.home;
 
 import android.os.Bundle;
 
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -9,6 +12,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.dispenser.R;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.card.MaterialCardView;
+
+import java.util.Objects;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -61,6 +68,42 @@ public class HomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home, container, false);
+        View root = inflater.inflate(R.layout.fragment_home, container, false);
+        MaterialCardView cardProfile = root.findViewById(R.id.cardProfile);
+        MaterialCardView cardDevice=root.findViewById(R.id.cardDevice);
+        HomeActivity main = (HomeActivity) getActivity();
+
+        cardProfile.setOnClickListener(v -> {
+            BottomNavigationView bottomNav = main.findViewById(R.id.bottom_navigation);
+            bottomNav.setSelectedItemId(R.id.navigation_profile); // ganti dengan menu tujuanmu
+        });
+        cardDevice.setOnClickListener(v->{
+            BottomNavigationView bottomNav = main.findViewById(R.id.bottom_navigation);
+            bottomNav.setSelectedItemId(R.id.navigation_dispenser);
+
+        });
+
+//        Toolbar toolbar = root.findViewById(R.id.customToolbarHome);
+//        Objects.requireNonNull(getSupportActionBar()).setDisplayShowTitleEnabled(false);
+//
+//        ((AppCompatActivity) requireActivity()).setSupportActionBar(toolbar);
+        return root;
     }
+//    @Override
+//    public void onResume() {
+//        super.onResume();
+//
+//        AppCompatActivity activity = (AppCompatActivity) requireActivity();
+//        ActionBar actionBar = activity.getSupportActionBar();
+//
+//        if (actionBar != null) {
+//            actionBar.setDisplayShowHomeEnabled(true);
+//            actionBar.setLogo(R.drawable.dispensericon); // ganti logomu
+//            actionBar.setDisplayUseLogoEnabled(true);
+//
+//            actionBar.setDisplayShowTitleEnabled(false); // hilangin judul
+//            actionBar.setDisplayHomeAsUpEnabled(false);  // hilangin tombol back
+//        }
+//    }
+
 }
