@@ -13,9 +13,13 @@
         android:theme="@style/Theme.Dispenser"
         tools:targetApi="31">
         <activity
+            android:name=".ui.dispenser.DispenserDetailActivity"
+            android:exported="false"
+            android:theme="@style/AppTheme"/>
+        <activity
             android:name=".ui.history.HistoryActivity"
-            android:theme="@style/AppTheme"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".ui.add_dispenser.list_dispenser"
             android:exported="false" />
