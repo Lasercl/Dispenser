@@ -5,6 +5,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -21,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.dispenser.R;
+import com.example.dispenser.ui.dispenser.DispenserDetailActivity;
 
 public class DispenserFragment extends Fragment {
 
@@ -48,7 +50,6 @@ public class DispenserFragment extends Fragment {
         // baru cari toolbar di dalam includeView
         ImageButton addButton = toolbar.findViewById(R.id.addHome);
 
-
         addButton.setOnClickListener(view -> {
             // Tambahkan logika untuk tombol "Add" di sini
             int[] location = new int[2];
@@ -69,7 +70,11 @@ public class DispenserFragment extends Fragment {
             listDispenserFragment.show(getParentFragmentManager(), "AddDispenser");
         });
 
-
+        View cardDispenser=root.findViewById(R.id.fragment_container);
+        cardDispenser.setOnClickListener(v->{
+            Intent intent=new Intent(getActivity(), DispenserDetailActivity.class);
+            startActivity(intent);
+        });
 
         return root;
     }
