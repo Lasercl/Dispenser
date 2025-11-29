@@ -49,14 +49,14 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         HistoryModel h = list.get(position);
 
-        holder.txtTime.setText(h.getTimestamp());
+        holder.txtTime.setText(h.getTimeStamp());
         holder.txtDispenser.setText("Dispenser: " + h.getDispenserId());
         holder.txtVariant.setText("Variant: " +  h.getVariant());
         holder.txtVolume.setText("Volume: " + h.getVolume());
         holder.txtCountBottle.setText("Count: " + h.getBottleCount());
         holder.txtTimeUsed.setText("Time used: " + h.getTimeUsed());
         holder.txtDispoenserVolume.setText("Dispenser volume: " + h.getDispenserVolume());
-        holder.txtTime.setText(h.getTimestamp());
+//        holder.txtTime.setText(h.getTimestamp());
 
 //        holder.txtDetail.setText(h.volume + " ml  •  " + h.mode + "  •  User: " + h.user);
     }
