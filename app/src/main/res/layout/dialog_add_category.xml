@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="20dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Category"
+        android:textStyle="bold" />
+    <EditText
+        android:id="@+id/edit_category"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Coffee Milk"
+        android:inputType="textCapWords"
+        android:layout_marginBottom="10dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Liquid A"
+        android:textStyle="bold" />
+    <EditText
+        android:id="@+id/edit_liquid_a"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Kopi"
+        android:inputType="textCapWords"
+        android:layout_marginBottom="10dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Volume Bottle A (ml)"
+        android:textStyle="bold" />
+    <EditText
+        android:id="@+id/edit_volume_a"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="500"
+        android:inputType="number"
+        android:layout_marginBottom="10dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Liquid B"
+        android:textStyle="bold" />
+    <EditText
+        android:id="@+id/edit_liquid_b"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Milk"
+        android:inputType="textCapWords"
+        android:layout_marginBottom="10dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Volume Bottle B (ml)"
+        android:textStyle="bold" />
+    <EditText
+        android:id="@+id/edit_volume_b"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="500"
+        android:inputType="number"/>
+
+</LinearLayout>
