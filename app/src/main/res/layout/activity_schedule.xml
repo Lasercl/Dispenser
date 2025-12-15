@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:id="@+id/main"
+    android:layout_height="match_parent"
+    android:background="#A8E4CF">
+
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/white"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="60dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="24dp"
+        app:cardCornerRadius="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/holo_orange_light"
+        android:padding="20dp"
+        android:layout_margin="20dp">
+
+        <TextView
+            android:id="@+id/title_scheduled"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Scheduled"
+            android:textColor="@android:color/black"
+            android:textSize="32sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <TextView
+            android:id="@+id/label_category"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Category"
+            android:textColor="@android:color/darker_gray"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/title_scheduled" />
+
+        <TextView
+            android:id="@+id/spinner_category"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:layout_marginStart="8dp"
+            android:paddingStart="8dp"
+            android:paddingTop="4dp"
+            android:paddingEnd="20dp"
+            android:paddingBottom="4dp"
+            android:text="Coffee Milk ▼"
+            android:textColor="@android:color/black"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="@+id/label_category"
+            app:layout_constraintStart_toEndOf="@+id/label_category"
+            app:layout_constraintTop_toTopOf="@+id/label_category" />
+
+        <LinearLayout
+            android:id="@+id/layout_coffee"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="10dp"
+            android:background="@android:color/transparent"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:padding="16dp"
+            app:layout_constraintEnd_toStartOf="@+id/layout_milk"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/spinner_category">
+
+            <ImageView
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:contentDescription="liquid A"
+                android:src="@drawable/beaker_liquid_filled_a" />
+            <TextView
+                android:id="@+id/liquidAText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Coffee | 20 ml"
+            android:textColor="@android:color/black"
+            android:textSize="16sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layout_milk"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:background="@android:color/transparent"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:padding="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/layout_coffee"
+            app:layout_constraintTop_toTopOf="@+id/layout_coffee">
+
+            <ImageView
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:contentDescription="liquid B"
+                android:src="@drawable/beaker_liquid_filled_b" />
+            <TextView
+                android:id="@+id/liquidBText"
+
+                android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Milk | 80 ml"
+            android:textColor="@android:color/black"
+            android:textSize="16sp" />
+        </LinearLayout>
+
+
+        <TextView
+            android:id="@+id/label_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:text="Time"
+            android:textColor="@android:color/darker_gray"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/layout_coffee" />
+
+        <ImageView
+            android:id="@+id/icon_time"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginTop="8dp"
+            android:contentDescription="@string/clock_icon_desc"
+            android:src="@drawable/ic_clock"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/label_time" />
+
+        <LinearLayout
+            android:id="@+id/layout_time_input"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="@+id/icon_time"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/icon_time"
+            app:layout_constraintTop_toTopOf="@+id/icon_time">
+            <NumberPicker
+                android:id="@+id/picker_ampm"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:descendantFocusability="blocksDescendants" />
+
+            <NumberPicker
+                android:id="@+id/picker_hour"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:descendantFocusability="blocksDescendants" />
+
+            <NumberPicker
+                android:id="@+id/picker_minute"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:descendantFocusability="blocksDescendants" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/label_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="Date"
+            android:textColor="@android:color/darker_gray"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/layout_time_input" />
+
+        <ImageView
+            android:id="@+id/icon_date"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginTop="8dp"
+            android:contentDescription="@string/calendar_icon_desc"
+            android:src="@drawable/outline_calendar_month_24"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/label_date" />
+
+        <TextView
+            android:id="@+id/input_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:background="@color/white"
+            android:drawableEnd="@drawable/outline_calendar_add_on_24"
+            android:drawablePadding="8dp"
+            android:paddingStart="16dp"
+            android:paddingTop="8dp"
+            android:paddingEnd="16dp"
+            android:paddingBottom="8dp"
+            android:text="Mon, Dec 1, 2025"
+            android:textColor="@android:color/black"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="@+id/icon_date"
+            app:layout_constraintStart_toEndOf="@+id/icon_date"
+            app:layout_constraintTop_toTopOf="@+id/icon_date" />
+
+        <Button
+            android:id="@+id/button_confirm"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:backgroundTint="#4CAF50"
+            android:minHeight="50dp"
+            android:text="Confirm"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"
+            app:cornerRadius="25dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/input_date" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>
+</androidx.constraintlayout.widget.ConstraintLayout>
