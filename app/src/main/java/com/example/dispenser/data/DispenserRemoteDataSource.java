@@ -28,21 +28,39 @@ public class DispenserRemoteDataSource {
 
                 for (DataSnapshot child : snapshot.getChildren()) {
                     //contoh aja
-                    String name= child.getKey();
+                    String id= child.getKey();
+                    String name= child.child("deviceName").getValue(String.class);
+
                     Log.d("TAG", "listdispenser0 "+name );
 
-                    boolean statusBool = child.child("Dispensing_status").getValue(Boolean.class);
+                    boolean statusBool = child.child("status").getValue(Boolean.class);
+
                     Log.d("TAG", "listdispenser1 "+name );
-                    String waterlevel = child.child("waterlevel").getValue(Integer.class).toString();
-                    String status;
-                    if(statusBool){
-                        status="Available";
-                    }else {
-                        status="Unavailable";
-                    }
-                    Log.d("TAG", "listdispenser "+name + status);
-                    Dispenser dispenser = new Dispenser(name, status);
-                    dispenser.setWaterlevel(waterlevel);
+                    int waterlevelTankA = child.child("waterLevelTankA").getValue(Integer.class);
+                    int waterlevelTankB=child.child("waterLevelTankB").getValue(Integer.class);
+                    int waterLiquidFilledA=child.child("volumeFilledA").getValue(Integer.class);
+                    int waterLiquidFilledB=child.child("volumeFilledB").getValue(Integer.class);
+                    String userId=child.child("userId").getValue(String.class);
+                    boolean power=child.child("power").getValue(Boolean.class);
+                    int bottlecount=child.child("bottleCount").getValue(Integer.class);
+                    Long timeStart=child.child("timeStart").getValue(Long.class);
+//                    String status;
+//                    if(statusBool){
+//                        status="Available";
+//                    }else {
+//                        status="Unavailable";
+//                    }
+                    Log.d("TAG", "listdispenser "+name + DispenserUtility.getStatus(statusBool));
+                    Dispenser dispenser = new Dispenser(name, statusBool);
+                    dispenser.setDeviceId(id);
+                    dispenser.setWaterLevelTankA(waterlevelTankA);
+                    dispenser.setWaterLevelTankB(waterlevelTankB);
+                    dispenser.setVolumeFilledA(waterLiquidFilledA);
+                    dispenser.setVolumeFilledB(waterLiquidFilledB);
+                    dispenser.setTimeStart(timeStart);
+                    dispenser.setBottleCount(bottlecount);
+                    dispenser.setUserId(userId);
+                    dispenser.setPower(power);
                     if (name != null) {
                         list.add(dispenser);
                     }

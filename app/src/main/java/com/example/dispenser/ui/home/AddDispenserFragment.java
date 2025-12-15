@@ -25,12 +25,17 @@ import android.view.WindowManager;
 import com.example.dispenser.R;
 import com.example.dispenser.adapter.DispenserAdapter;
 import com.example.dispenser.data.DispenserRemoteDataSource;
+import com.example.dispenser.data.DispenserUtility;
 import com.example.dispenser.data.model.Dispenser;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class AddDispenserFragment extends DialogFragment {
+    private FirebaseUser user= FirebaseAuth.getInstance().getCurrentUser();
+    public static final String DISPENSER_SELECTED="DISPENSER_SELECTED";
     private AddDispenserViewModel viewModel;
     private  LiveData<List<Dispenser>> listDispenser;
     private int anchorX; // posisi X tombol
@@ -86,18 +91,26 @@ public class AddDispenserFragment extends DialogFragment {
             // Contoh: tampilkan log atau tutup dialog
             Log.d("AddDispenserFragment", "Dipilih: " + dispenser.getDeviceName());
             Bundle result = new Bundle();
-            if(dispenser.getStatus().equalsIgnoreCase("Available")){
-                result.putString("dispenserName", dispenser.getDeviceName()); // contoh field
-                result.putString("dispenserStatus", dispenser.getStatus());
-                result.putString("waterLevel", dispenser.getWaterlevel());
+            if(DispenserUtility.getStatus(dispenser.getStatus()).equalsIgnoreCase("Available")){
+                result.putParcelable(DISPENSER_SELECTED,dispenser);
 
-                dispenser.setStatus("Unavailable");
-                viewModel.updateDispenser(dispenser);
+                dispenser.setUserId(user.getUid());
+                dispenser.setStatus(false);
                 adapter.notifyDataSetChanged();
                 getParentFragmentManager().setFragmentResult("selected_dispenser", result);
 
+                viewModel.updateDispenser(dispenser);
                 dismiss();
 
+            } else if(dispenser.getUserId().equalsIgnoreCase(user.getUid())){
+
+                result.putParcelable(DISPENSER_SELECTED,dispenser);
+////                dispenser.setUserId(user.getUid());
+////                dispenser.setStatus(false);
+                adapter.notifyDataSetChanged();
+                getParentFragmentManager().setFragmentResult("selected_dispenser", result);
+
+//
             }
 
 

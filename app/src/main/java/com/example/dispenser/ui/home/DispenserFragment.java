@@ -16,17 +16,36 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.dispenser.R;
+import com.example.dispenser.data.DispenserUtility;
+import com.example.dispenser.data.model.Dispenser;
 import com.example.dispenser.ui.dispenser.DispenserDetailActivity;
+import com.example.dispenser.ui.schedule.ScheduleActivity;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 public class DispenserFragment extends Fragment {
 
     private DispenserViewModel mViewModel;
+    private TextView deviceNameUi;
+    private TextView deviceInUseUi;
+    private TextView deviceWaterLevelUiA;
+    private TextView deviceWaterLevelUiB;
+    private TextView scheduleDate;
+    private TextView scheduleClock;
+    private ImageView checklist;
+    private TextView waterLiquidFilledA;
+    private TextView waterLiquidFilledB;
+
+
 
     public static DispenserFragment newInstance() {
         return new DispenserFragment();
@@ -70,41 +89,97 @@ public class DispenserFragment extends Fragment {
             listDispenserFragment.show(getParentFragmentManager(), "AddDispenser");
         });
 
-        View cardDispenser=root.findViewById(R.id.fragment_container);
-        cardDispenser.setOnClickListener(v->{
-            Intent intent=new Intent(getActivity(), DispenserDetailActivity.class);
-            startActivity(intent);
+//        View cardDispenser=root.findViewById(R.id.fragment_container);
+//        cardDispenser.setOnClickListener(v->{
+//            Intent intent=new Intent(getActivity(), DispenserDetailActivity.class);
+//            startActivity(intent);
+//        });
+
+
+
+        Button schedule=root.findViewById(R.id.btn_create_schedule);
+        schedule.setOnClickListener(view -> {
+           Intent intent=new Intent(getActivity(), ScheduleActivity.class);
+           startActivity(intent);
         });
 
         return root;
     }
 
+    private void showLastDispenser() {
+        mViewModel.getLastDispenser().observe(getViewLifecycleOwner(), dispenser -> {
+            if (dispenser != null){
+                updateDispenserUI(dispenser);
+            }
+        });
+
+
+    }
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        checklist = view.findViewById(R.id.imgCheck);
+        deviceNameUi = view.findViewById(R.id.deviceName);
+        deviceInUseUi = view.findViewById(R.id.deviceInUse);
+        deviceWaterLevelUiA = view.findViewById(R.id.numberTankLiquidA);
+        deviceWaterLevelUiB = view.findViewById(R.id.numberTankLiquidB);
+        scheduleDate = view.findViewById(R.id.scheduleDate);
+        scheduleClock = view.findViewById(R.id.scheduleClock);
+        waterLiquidFilledA=view.findViewById(R.id.waterFilledLiquidA);
+        waterLiquidFilledB=view.findViewById(R.id.waterFilledLiquidB);
+
+
+
+
         // Dengarkan hasil dari AddDispenserFragment
         getParentFragmentManager().setFragmentResultListener("selected_dispenser", this,
                 (requestKey, bundle) -> {
-                    String dispenserName = bundle.getString("dispenserName");
-                    String dispenserStatus = bundle.getString("dispenserStatus");
-                    String waterlevel = bundle.getString("waterLevel");
-                    ImageView checklist=view.findViewById(R.id.imgCheck);
-                    if (dispenserStatus.equalsIgnoreCase("unavailable")) {
-                        checklist.setImageResource(R.drawable.notcheck);
-                    }
-                    TextView deviceNameUi = view.findViewById(R.id.deviceName);
-                    TextView deviceInUseUi = view.findViewById(R.id.deviceInUse);
-                    TextView deviceWaterLevelUi=view.findViewById(R.id.water_level);
-                    deviceNameUi.setText("Device Name: " + dispenserName);
-                    deviceInUseUi.setText("Device in Use:");
-                    deviceWaterLevelUi.setText("Remaining Liquid: "+waterlevel+" ml");
+                    Dispenser dispenser=bundle.getParcelable(AddDispenserFragment.DISPENSER_SELECTED);
 
-                    Log.d("HomeFragment", "Dipilih: " + dispenserName + " (ID: " + dispenserStatus + ")");
+                    // Panggil fungsi update UI yang baru
+                    updateDispenserUI(dispenser);
 
-                    // Lakukan sesuatu, misalnya tampilkan di UI
-                    // textViewSelectedDispenser.setText(dispenserName);
+                    // *** PENTING: Simpan dispenser yang baru dipilih ke Room Lokal ***
+                    // Kita asumsikan ViewModel punya method ini.
+                    mViewModel.saveLastUsedDispenser(dispenser);
+
+                    Log.d("HomeFragment", "Dipilih: " + dispenser.getDeviceName());
                 });
 
+    }
+    private void updateDispenserUI(Dispenser dispenser) {
+        if (dispenser == null) return;
+
+        String dispenserName = dispenser.getDeviceName();
+        String dispenserStatus = DispenserUtility.getStatus(dispenser.getStatus());
+        int waterlevelTankA = dispenser.getWaterLevelTankA();
+
+        // Checklist/Status Icon
+        if (dispenserStatus.equalsIgnoreCase("Available") || dispenser.getUserId() != null) {
+            checklist.setImageResource(R.drawable.check);
+        } else {
+            // Misalnya set ke icon lain jika sedang In Use oleh user lain
+            // checklist.setImageResource(R.drawable.uncheck);
+        }
+
+        // Update TextViews
+        deviceNameUi.setText("Device Name: " + dispenserName);
+        deviceInUseUi.setText("Device in Use:");
+        scheduleDate.setText(getScheduleDate(dispenser.getTimeStart()));
+        scheduleClock.setText(getScheduleTime(dispenser.getTimeStart()));
+
+        deviceWaterLevelUiA.setText(waterlevelTankA + " ml");
+        // Asumsi Tank B
+        deviceWaterLevelUiB.setText(dispenser.getWaterLevelTankB() + " ml");
+    }
+    private String getScheduleDate(long timeStart) {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM yyyy", Locale.getDefault());
+        return sdf.format(new Date(timeStart));
+    }
+    private String getScheduleTime(long timeStart) {
+        SimpleDateFormat sdf = new SimpleDateFormat("hh:mm a", Locale.getDefault());
+        return sdf.format(new Date(timeStart));
     }
 
     @Override
@@ -112,6 +187,8 @@ public class DispenserFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         mViewModel = new ViewModelProvider(this).get(DispenserViewModel.class);
         // TODO: Use the ViewModel
+        showLastDispenser();
+
     }
 
 }

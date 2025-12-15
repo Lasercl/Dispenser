@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.dispenser.R;
+import com.example.dispenser.data.DispenserUtility;
 import com.example.dispenser.data.model.Dispenser;
 
 import java.util.List;
@@ -46,7 +47,7 @@ public class DispenserAdapter extends RecyclerView.Adapter<DispenserAdapter.MyVi
     @Override
     public void onBindViewHolder(@NonNull DispenserAdapter.MyViewHolder holder, int position) {
         String currentName=listData.get(position).getDeviceName();
-        String currentStatus=listData.get(position).getStatus();
+        String currentStatus= DispenserUtility.getStatus(listData.get(position).getStatus());
 
         holder.name.setText(currentName);
         holder.status.setText(currentStatus);
