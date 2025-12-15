@@ -75,7 +75,7 @@
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:layout_marginStart="16dp"
-                    android:src="@drawable/check" />
+                    android:src="@drawable/notcheck" />
             </LinearLayout>
 
             <ScrollView
@@ -127,6 +127,7 @@
                                     android:contentDescription="Liquid A" />
 
                                 <TextView
+                                    android:id="@+id/waterFilledLiquidA"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="Liquid A : -"
@@ -148,6 +149,7 @@
                                     android:contentDescription="Liquid B" />
 
                                 <TextView
+                                    android:id="@+id/waterFilledLiquidB"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="Liquid B : -"
@@ -202,11 +204,12 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="4dp"
-                                    android:text="Remaining\nLiquid A : --"
+                                    android:text="Remaining\nLiquid A : "
                                     android:textColor="@android:color/black"
                                     android:textSize="12sp" />
 
                                 <TextView
+                                    android:id="@+id/numberTankLiquidA"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="4dp"
@@ -237,11 +240,12 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="4dp"
-                                    android:text="Remaining\nLiquid B : --"
+                                    android:text="Remaining\nLiquid B : "
                                     android:textColor="@android:color/black"
                                     android:textSize="12sp" />
 
                                 <TextView
+                                    android:id="@+id/numberTankLiquidB"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="4dp"
@@ -287,6 +291,7 @@
                                 android:layout_marginBottom="2dp"/>
 
                             <TextView
+                                android:id="@+id/scheduleDate"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="19 November 2025"
@@ -294,6 +299,7 @@
                                 android:textSize="12sp" />
 
                             <TextView
+                                android:id="@+id/scheduleClock"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="11:00 PM"
