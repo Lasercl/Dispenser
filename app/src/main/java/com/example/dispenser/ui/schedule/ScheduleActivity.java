@@ -3,6 +3,7 @@ package com.example.dispenser.ui.schedule;
 import static android.content.ContentValues.TAG;
 
 import android.app.DatePickerDialog;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -28,6 +29,7 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import com.example.dispenser.R;
 import com.example.dispenser.data.PresetModel;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -237,7 +239,8 @@ public class ScheduleActivity extends AppCompatActivity {
         final EditText editVolumeB = dialogView.findViewById(R.id.edit_volume_b);
 
         // 3. Buat AlertDialog
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        MaterialAlertDialogBuilder builder =
+                new MaterialAlertDialogBuilder(this);
         builder.setTitle("Create New Recipe Preset");
         builder.setView(dialogView); // Set tampilan custom ke dialog builder
 
@@ -273,7 +276,15 @@ public class ScheduleActivity extends AppCompatActivity {
         // 5. Set tombol Negative (Cancel)
         builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
 
-        builder.show();
+        AlertDialog dialog = builder.create();
+        dialog.show();
+
+        // ⚠️ HARUS SETELAH show()
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE)
+                .setTextColor(Color.BLACK);
+
+        dialog.getButton(AlertDialog.BUTTON_NEGATIVE)
+                .setTextColor(Color.BLACK);
     }
     private void showPopupMenu(TextView anchorView, List<PresetModel> finalPresets) {
         PopupMenu popup = new PopupMenu(this, anchorView);
