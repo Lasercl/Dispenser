@@ -31,7 +31,13 @@ public class Dispenser implements Parcelable {
 
     private int volumeFilledA;
     private int volumeFilledB;
-
+    private String liquidNameA;
+    private String liquidNameB;
+    private String category;
+    private int currentBottle;
+    public Dispenser() {
+        // WAJIB untuk Firebase
+    }
     public Dispenser(String deviceName, boolean status) {
         this.deviceName = deviceName;
         this.status = status;
@@ -48,6 +54,10 @@ public class Dispenser implements Parcelable {
         waterLevelTankB = in.readInt();
         volumeFilledA = in.readInt();
         volumeFilledB = in.readInt();
+        deviceId = in.readString();
+        category = in.readString();
+        liquidNameA = in.readString();
+        liquidNameB = in.readString();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             power = in.readBoolean();
         }
@@ -159,12 +169,50 @@ public class Dispenser implements Parcelable {
     public void writeToParcel(@NonNull Parcel parcel, int i) {
         parcel.writeString(deviceId);
         parcel.writeString(deviceName);
-        parcel.writeBoolean(status);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            parcel.writeBoolean(status);
+        }
         parcel.writeInt(waterLevelTankA);
         parcel.writeInt(waterLevelTankB);
         parcel.writeInt(volumeFilledA);
         parcel.writeInt(volumeFilledB);
         parcel.writeInt(bottleCount);
         parcel.writeLong(timeStart);
+        parcel.writeString(liquidNameA);
+        parcel.writeString(liquidNameB);
+        parcel.writeString(category);
+
+    }
+
+    public String getLiquidNameB() {
+        return liquidNameB;
+    }
+
+    public void setLiquidNameB(String liquidNameB) {
+        this.liquidNameB = liquidNameB;
+    }
+
+    public String getLiquidNameA() {
+        return liquidNameA;
+    }
+
+    public void setLiquidNameA(String liquidNameA) {
+        this.liquidNameA = liquidNameA;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public int getCurrentBottle() {
+        return currentBottle;
+    }
+
+    public void setCurrentBottle(int currentBottle) {
+        this.currentBottle = currentBottle;
     }
 }

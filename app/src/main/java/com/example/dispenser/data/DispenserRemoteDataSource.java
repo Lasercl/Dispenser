@@ -2,12 +2,16 @@ package com.example.dispenser.data;
 
 import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.dispenser.data.model.Dispenser;
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +20,42 @@ public class DispenserRemoteDataSource {
     private FirebaseDatabase database= FirebaseDatabase.getInstance("https://dispenser-dc485-default-rtdb.asia-southeast1.firebasedatabase.app/");
 
     private ArrayList<Dispenser> dispenserList=new ArrayList<>();
+    private DatabaseReference realtimeRef;
+    private ValueEventListener realtimeListener;
+    public LiveData<Dispenser> listenDispenserRealtime(String deviceId) {
+
+        MutableLiveData<Dispenser> realtimeData = new MutableLiveData<>();
+
+        realtimeRef = database
+                .getReference("dispenser")
+                .child(deviceId);
+
+        realtimeListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Dispenser dispenser = snapshot.getValue(Dispenser.class);
+                if (dispenser != null) {
+                    dispenser.setDeviceId(deviceId);
+                    realtimeData.setValue(dispenser);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {}
+        };
+
+        realtimeRef.addValueEventListener(realtimeListener);
+        return realtimeData;
+    }
+
+    // ==========================
+    // 3️⃣ STOP LISTENER (PENTING)
+    // ==========================
+    public void stopRealtimeListener() {
+        if (realtimeRef != null && realtimeListener != null) {
+            realtimeRef.removeEventListener(realtimeListener);
+        }
+    }
     public LiveData<List<Dispenser>> listDispenser(){
         MutableLiveData<List<Dispenser>> liveData = new MutableLiveData<>();
 

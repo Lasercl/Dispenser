@@ -7,7 +7,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.NumberPicker;
@@ -26,6 +28,7 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import com.example.dispenser.R;
 import com.example.dispenser.data.PresetModel;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -39,25 +42,49 @@ public class ScheduleActivity extends AppCompatActivity {
     private PresetModel presetModelGlobal;
     private final String ADD_NEW_CATEGORY_TITLE = "➕ Add New Category";
     private final CompositeDisposable disposables = new CompositeDisposable();
+    private TextInputEditText inputBottleCount;
 
     private NumberPicker pickerAmpm;
     private NumberPicker pickerHour;
     private NumberPicker pickerMinute;
     private TextView inputDate;
-    private  ScheduleController scheduleController=new ScheduleController();
+    private Button buttonConfirm;
+    private  ScheduleController scheduleController;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_schedule);
+        getSupportActionBar().setTitle("Schedule");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        setContentView(R.layout.activity_schedule);
         TextView anchorView = findViewById(R.id.spinner_category);
-        // Dapatkan referensi
+        // Dapatkan referensi\
+        scheduleController=new ScheduleController(this.getApplication());
+        buttonConfirm=findViewById(R.id.button_confirm);
         pickerAmpm = findViewById(R.id.picker_ampm);
         pickerHour = findViewById(R.id.picker_hour);
         pickerMinute = findViewById(R.id.picker_minute);
         inputDate = findViewById(R.id.input_date);
-
+        inputBottleCount=findViewById(R.id.input_bottleCount);
         // Set listener yang akan memanggil DatePickerDialog saat diklik
+//        buttonConfirm.setOnClickListener(view -> {
+//            scheduleController.getLastDispenser().observe(this, dispenser ->{
+//                if (dispenser != null) {
+//                    long scheduledTimestamp = getSelectedDateTimeMillis();
+//                    scheduleController.confirmSchedule(dispenser.getDeviceId(),presetModelGlobal,scheduledTimestamp);
+//                }
+//            });
+//        });
+        buttonConfirm.setOnClickListener(view -> {
+            String lastDispenserId=scheduleController.getDispenserLastId();
+                if (lastDispenserId != null) {
+                    long scheduledTimestamp = getSelectedDateTimeMillis();
+                    int bottleCount=Integer.parseInt(inputBottleCount.getText().toString().trim());
+
+                    scheduleController.confirmSchedule(lastDispenserId,presetModelGlobal,scheduledTimestamp,bottleCount);
+                }
+        });
         inputDate.setOnClickListener(v -> showDatePickerDialog());
         setupTimePickers();
         anchorView.setOnClickListener(v->showDynamicPopupMenuRx(anchorView));
@@ -67,6 +94,17 @@ public class ScheduleActivity extends AppCompatActivity {
             return insets;
         });
     }
+
+    private long getSelectedDateTimeMillis() {
+        return scheduleController.calculateDateTimeMillis(
+                inputDate.getText().toString(),
+                pickerHour.getValue(),
+                pickerMinute.getValue(),
+                pickerAmpm.getValue()
+        );
+    }
+
+
     private void setupTimePickers() {
 
         // A. Konfigurasi AM/PM
@@ -271,5 +309,13 @@ public class ScheduleActivity extends AppCompatActivity {
         super.onDestroy();
         // Penting untuk mencegah memory leaks
         disposables.clear();
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed(); // kembali ke activity sebelumnya
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
