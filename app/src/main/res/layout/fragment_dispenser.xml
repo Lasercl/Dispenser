@@ -99,6 +99,7 @@
                         app:layout_constraintEnd_toEndOf="parent">
 
                         <TextView
+                            android:id="@+id/label_category_dispenser"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Category: Coffee Milk"
@@ -219,6 +220,7 @@
                                     android:textSize="12sp" />
                             </LinearLayout>
                             <TextView
+                                android:id="@+id/nameLiquidTankA"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Coffee"
@@ -255,6 +257,7 @@
                                     android:textSize="12sp" />
                             </LinearLayout>
                             <TextView
+                                android:id="@+id/nameLiquidTankB"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Milk"
@@ -353,6 +356,7 @@
                                 android:orientation="vertical">
 
                                 <TextView
+                                    android:id="@+id/numberOfProduction"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="Number of Production: 10"
@@ -360,6 +364,7 @@
                                     android:textSize="12sp" />
 
                                 <TextView
+                                    android:id="@+id/productionCompleted"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="Production Completed: 4"
@@ -367,6 +372,7 @@
                                     android:textSize="12sp" />
 
                                 <TextView
+                                    android:id="@+id/remainingToComplete"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="Remaining to complete: 6"

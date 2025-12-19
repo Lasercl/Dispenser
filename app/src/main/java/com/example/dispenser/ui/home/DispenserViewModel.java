@@ -13,6 +13,8 @@ import com.example.dispenser.data.model.Dispenser;
 
 public class DispenserViewModel extends AndroidViewModel {
     private DispenserRepository repo;
+    private LiveData<Dispenser> realtimeDispenser;
+
 
     public DispenserViewModel(@NonNull Application application) {
         super(application);
@@ -20,13 +22,34 @@ public class DispenserViewModel extends AndroidViewModel {
         this.repo = new DispenserRepository(application);
     }
 
-    public LiveData<Dispenser> getLastDispenser() {
-        // Cukup panggil method dari Repository. LiveData akan diteruskan ke Fragment.
-        return repo.getLastDispenser();
+//    public LiveData<Dispenser> getLastDispenser() {
+//        // Cukup panggil method dari Repository. LiveData akan diteruskan ke Fragment.
+//        return repo.getLastDispenser();
+//    }
+    public String getDispenserLastId(){
+        return repo.getDispenserLastId();
     }
-    public void saveLastUsedDispenser(Dispenser dispenser) {
+    public void saveLastUsedDispenser(String deviceid) {
         // Kita panggil operasi Room dari background thread
-        repo.insertDispenser(dispenser);
+//        repo.insertDispenser(dispenser);
+        repo.selectDispenser(deviceid);
+    }
+
+    // =====================
+    // REALTIME MONITORING
+    // =====================
+    public LiveData<Dispenser> listenDispenser(String deviceId) {
+        realtimeDispenser = repo.listenDispenser(deviceId);
+        return realtimeDispenser;
+    }
+
+    // =====================
+    // STOP LISTENER
+    // =====================
+    @Override
+    protected void onCleared() {
+        super.onCleared();
+        repo.stopListenDispenser();
     }
     // TODO: Implement the ViewModel
 }

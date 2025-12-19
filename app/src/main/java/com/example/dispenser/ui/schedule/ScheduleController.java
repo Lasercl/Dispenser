@@ -1,24 +1,107 @@
 package com.example.dispenser.ui.schedule;
 import static android.content.ContentValues.TAG;
 
+import android.app.Application;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.lifecycle.LiveData;
+
+import com.example.dispenser.data.DispenserDao;
+import com.example.dispenser.data.DispenserDatabase;
+import com.example.dispenser.data.DispenserRepository;
 import com.example.dispenser.data.PresetModel;
+import com.example.dispenser.data.model.Dispenser;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import io.reactivex.rxjava3.core.Single;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public class ScheduleController {
+    private DispenserDao dispenserDao;
+
 
 // --- Di dalam Activity atau Repository Class Anda ---
+    // Di ScheduleController.java
 
+// ... (Di bawah inisialisasi TAG dan rtdbRef) ...
+    private DatabaseReference rtdbRef = FirebaseDatabase.getInstance("https://dispenser-dc485-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("dispenser");
+    private DispenserRepository repository;
+    public ScheduleController(Application application){
+        DispenserDatabase db = DispenserDatabase.getDatabase(application);
+        repository = new DispenserRepository(application);
+        dispenserDao = db.dispenserDao();
+    }
+
+    public long calculateDateTimeMillis(
+            String dateText,
+            int hour12,
+            int minute,
+            int amPm
+    ) {
+        if (dateText == null || dateText.isEmpty()) {
+            throw new IllegalStateException("Date not selected");
+        }
+
+        Calendar calendar = Calendar.getInstance();
+
+        try {
+            SimpleDateFormat sdf =
+                    new SimpleDateFormat("EEE, MMM d, yyyy", Locale.getDefault());
+            calendar.setTime(sdf.parse(dateText));
+        } catch (Exception e) {
+            throw new RuntimeException("Invalid date format", e);
+        }
+
+        // Convert 12h → 24h
+        int hour = hour12;
+        if (hour == 12) hour = 0;
+        if (amPm == Calendar.PM) hour += 12;
+
+        calendar.set(Calendar.HOUR_OF_DAY, hour);
+        calendar.set(Calendar.MINUTE, minute);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+
+        return calendar.getTimeInMillis();
+    }
+    // ...
+//    public LiveData<Dispenser> getLastDispenser() {
+//
+//        // Asumsi DAO punya query untuk mengambil data terakhir
+//        return repository.getLastDispenser();
+//    }
+    public String getDispenserLastId(){
+        return repository.getDispenserLastId();
+    }
+    public void confirmSchedule(String deviceId, PresetModel presetModel, long scheduledTimestamp,int bottleCount) {
+
+
+        DatabaseReference deviceRef = rtdbRef.child(deviceId);
+        deviceRef.child("category").setValue(presetModel.getNamePresets());
+        deviceRef.child("timeStart").setValue(scheduledTimestamp);
+        deviceRef.child("volumeFilledA").setValue(presetModel.getVolumeA());
+        deviceRef.child("volumeFilledB").setValue(presetModel.getVolumeB());
+        deviceRef.child("liquidNameA").setValue(presetModel.getLiquidA());
+        deviceRef.child("liquidNameB").setValue(presetModel.getLiquidB());
+        deviceRef.child("bottleCount").setValue(bottleCount);
+        deviceRef.child("currentBottle").setValue(0);
+
+
+    }
     public Single<List<PresetModel>> fetchPresetsRx(String userId) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 

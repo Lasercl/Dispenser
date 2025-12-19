@@ -35,6 +35,14 @@ import java.util.Locale;
 public class DispenserFragment extends Fragment {
 
     private DispenserViewModel mViewModel;
+    private TextView categoryLabel;
+    private TextView liquidAFill;
+    private TextView liquidBFill;
+    private TextView numberOfProduction;
+    private TextView productionCompleted;
+    private TextView remainingToComplete;
+    private TextView liquidTankA;
+    private TextView liquidTankB;
     private TextView deviceNameUi;
     private TextView deviceInUseUi;
     private TextView deviceWaterLevelUiA;
@@ -42,8 +50,6 @@ public class DispenserFragment extends Fragment {
     private TextView scheduleDate;
     private TextView scheduleClock;
     private ImageView checklist;
-    private TextView waterLiquidFilledA;
-    private TextView waterLiquidFilledB;
 
 
 
@@ -89,12 +95,6 @@ public class DispenserFragment extends Fragment {
             listDispenserFragment.show(getParentFragmentManager(), "AddDispenser");
         });
 
-//        View cardDispenser=root.findViewById(R.id.fragment_container);
-//        cardDispenser.setOnClickListener(v->{
-//            Intent intent=new Intent(getActivity(), DispenserDetailActivity.class);
-//            startActivity(intent);
-//        });
-
 
 
         Button schedule=root.findViewById(R.id.btn_create_schedule);
@@ -107,13 +107,20 @@ public class DispenserFragment extends Fragment {
     }
 
     private void showLastDispenser() {
-        mViewModel.getLastDispenser().observe(getViewLifecycleOwner(), dispenser -> {
-            if (dispenser != null){
-                updateDispenserUI(dispenser);
-            }
-        });
+//        mViewModel.getLastDispenser().observe(getViewLifecycleOwner(), dispenser -> {
+//            if (dispenser != null){
+//                startRealtime(dispenser.getDeviceId());
+//            }
+//        });
+        String lastDispenserId = mViewModel.getDispenserLastId();
+        if (lastDispenserId != null) {
+            startRealtime(lastDispenserId);
+        }
 
-
+    }
+    private void startRealtime(String deviceId) {
+        mViewModel.listenDispenser(deviceId)
+                .observe(getViewLifecycleOwner(), this::updateDispenserUI);
     }
 
     @Override
@@ -122,12 +129,21 @@ public class DispenserFragment extends Fragment {
         checklist = view.findViewById(R.id.imgCheck);
         deviceNameUi = view.findViewById(R.id.deviceName);
         deviceInUseUi = view.findViewById(R.id.deviceInUse);
+        liquidAFill = view.findViewById(R.id.waterFilledLiquidA);
+        liquidBFill=view.findViewById(R.id.waterFilledLiquidB);
+        categoryLabel=view.findViewById(R.id.label_category_dispenser);
         deviceWaterLevelUiA = view.findViewById(R.id.numberTankLiquidA);
         deviceWaterLevelUiB = view.findViewById(R.id.numberTankLiquidB);
         scheduleDate = view.findViewById(R.id.scheduleDate);
         scheduleClock = view.findViewById(R.id.scheduleClock);
-        waterLiquidFilledA=view.findViewById(R.id.waterFilledLiquidA);
-        waterLiquidFilledB=view.findViewById(R.id.waterFilledLiquidB);
+        numberOfProduction=view.findViewById(R.id.numberOfProduction);
+        productionCompleted=view.findViewById(R.id.productionCompleted);
+        remainingToComplete=view.findViewById(R.id.remainingToComplete);
+        liquidTankA=view.findViewById(R.id.nameLiquidTankA);
+        liquidTankB=view.findViewById(R.id.nameLiquidTankB);
+
+
+
 
 
 
@@ -137,12 +153,10 @@ public class DispenserFragment extends Fragment {
                 (requestKey, bundle) -> {
                     Dispenser dispenser=bundle.getParcelable(AddDispenserFragment.DISPENSER_SELECTED);
 
-                    // Panggil fungsi update UI yang baru
                     updateDispenserUI(dispenser);
 
-                    // *** PENTING: Simpan dispenser yang baru dipilih ke Room Lokal ***
-                    // Kita asumsikan ViewModel punya method ini.
-                    mViewModel.saveLastUsedDispenser(dispenser);
+
+                    mViewModel.saveLastUsedDispenser(dispenser.getDeviceId());
 
                     Log.d("HomeFragment", "Dipilih: " + dispenser.getDeviceName());
                 });
@@ -150,7 +164,9 @@ public class DispenserFragment extends Fragment {
     }
     private void updateDispenserUI(Dispenser dispenser) {
         if (dispenser == null) return;
-
+        String liquidA=dispenser.getLiquidNameA()+ ": "+dispenser.getVolumeFilledA()+" ml";
+        String liquidB=dispenser.getLiquidNameB()+ ": "+dispenser.getVolumeFilledB()+" ml";
+        String categoryName=dispenser.getCategory();
         String dispenserName = dispenser.getDeviceName();
         String dispenserStatus = DispenserUtility.getStatus(dispenser.getStatus());
         int waterlevelTankA = dispenser.getWaterLevelTankA();
@@ -164,14 +180,24 @@ public class DispenserFragment extends Fragment {
         }
 
         // Update TextViews
+
         deviceNameUi.setText("Device Name: " + dispenserName);
         deviceInUseUi.setText("Device in Use:");
         scheduleDate.setText(getScheduleDate(dispenser.getTimeStart()));
         scheduleClock.setText(getScheduleTime(dispenser.getTimeStart()));
-
+        liquidAFill.setText(liquidA);
+        liquidBFill.setText(liquidB);
+        categoryLabel.setText("Category: "+categoryName);
+        // Asumsi Tank A
+        liquidTankA.setText(dispenser.getLiquidNameA());
         deviceWaterLevelUiA.setText(waterlevelTankA + " ml");
         // Asumsi Tank B
+        liquidTankB.setText(dispenser.getLiquidNameB());
         deviceWaterLevelUiB.setText(dispenser.getWaterLevelTankB() + " ml");
+        //production
+        numberOfProduction.setText("Number of Production: "+dispenser.getBottleCount());
+        productionCompleted.setText("Production Completed: "+dispenser.getCurrentBottle());
+        remainingToComplete.setText("Remaining to complete: "+(dispenser.getBottleCount()-dispenser.getCurrentBottle()));
     }
     private String getScheduleDate(long timeStart) {
         SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM yyyy", Locale.getDefault());
