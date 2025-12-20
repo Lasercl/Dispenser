@@ -8,16 +8,22 @@
     android:padding="24dp">
 
     <!-- Avatar -->
-    <ImageView
-        android:id="@+id/imgAvatar"
-        android:layout_width="120dp"
-        android:layout_height="120dp"
-        android:src="@drawable/outline_person_24"
-        android:layout_marginTop="24dp"
-        android:contentDescription="Avatar"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+    <com.google.android.material.imageview.ShapeableImageView
+    android:id="@+id/imgAvatar"
+    android:layout_width="120dp"
+    android:layout_height="120dp"
+    android:src="@drawable/outline_person_24"
+    android:layout_marginTop="24dp"
+    android:contentDescription="Avatar"
+    android:scaleType="centerCrop"
+    android:background="#F0F0F0"
+
+    app:shapeAppearanceOverlay="@style/CircleImage"
+
+    app:layout_constraintTop_toTopOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintEnd_toEndOf="parent" />
+
 
     <!-- Nama -->
     <TextView

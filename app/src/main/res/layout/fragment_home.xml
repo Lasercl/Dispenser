@@ -26,12 +26,16 @@
             android:orientation="horizontal"
             android:gravity="center_vertical"
             android:padding="20dp">
-
-            <ImageView
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/imageProfileHome"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
                 android:src="@drawable/outline_person_24"
-                android:tint="@android:color/black" />
+                android:scaleType="centerCrop"
+
+                app:shapeAppearanceOverlay="@style/CircleImage" />
+
+
 
             <TextView
                 android:id="@+id/tvUserName"
