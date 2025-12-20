@@ -43,6 +43,12 @@ public class HomeViewModel extends AndroidViewModel {
         realtimeDispenser = repo.listenDispenser(deviceId);
         return realtimeDispenser;
     }
+    public void setLogged(){
+        authRepository.setLoggedInUser();
+    }
+    public Boolean islogged(){
+        return authRepository.isLoggedIn();
+    }
     public FirebaseUser getCurrentUser(){
         return authRepository.getUser();
     }
