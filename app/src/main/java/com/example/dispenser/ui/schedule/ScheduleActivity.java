@@ -170,6 +170,11 @@ public class ScheduleActivity extends AppCompatActivity {
         );
 
         datePickerDialog.show();
+        datePickerDialog.getButton(AlertDialog.BUTTON_POSITIVE)
+                .setTextColor(Color.BLACK);
+        datePickerDialog.getButton(AlertDialog.BUTTON_NEGATIVE)
+                .setTextColor(Color.BLACK);
+
         //
     }
     private void updateDateLabel(int year, int month, int day) {
