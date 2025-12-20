@@ -9,12 +9,18 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.dispenser.data.AuthRemoteDataSource;
+import com.example.dispenser.data.AuthRepositoryImpl;
 import com.example.dispenser.data.DispenserRepository;
 import com.example.dispenser.data.model.Dispenser;
 import com.example.dispenser.ui.FragmentDestinationMenu;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class HomeViewModel extends AndroidViewModel {
     private DispenserRepository repo;
+    private AuthRemoteDataSource authRemoteDataSource=new AuthRemoteDataSource();
+    private AuthRepositoryImpl authRepository = AuthRepositoryImpl.getInstance(authRemoteDataSource);
 
 
     private LiveData<Dispenser> realtimeDispenser;
@@ -36,6 +42,9 @@ public class HomeViewModel extends AndroidViewModel {
     public LiveData<Dispenser> listenDispenser(String deviceId) {
         realtimeDispenser = repo.listenDispenser(deviceId);
         return realtimeDispenser;
+    }
+    public FirebaseUser getCurrentUser(){
+        return authRepository.getUser();
     }
     public String getDispenserLastId(){
         return repo.getDispenserLastId();

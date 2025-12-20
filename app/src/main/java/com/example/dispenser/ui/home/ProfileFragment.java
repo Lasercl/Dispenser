@@ -10,11 +10,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.dispenser.MainActivity;
 import com.example.dispenser.R;
 import com.example.dispenser.ui.history.HistoryActivity;
+import com.google.firebase.auth.FirebaseUser;
+
+import org.w3c.dom.Text;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -26,6 +31,10 @@ public class ProfileFragment extends Fragment {
         return new ProfileFragment();
     }
     private ProfileViewModel viewModel;
+    private TextView nameProfile;
+    private TextView email;
+    private ImageView pictureProfile;
+
 
 
     @Override
@@ -36,13 +45,24 @@ public class ProfileFragment extends Fragment {
 
         View root = inflater.inflate(R.layout.fragment_profile, container, false);
         viewModel = new ViewModelProvider(this).get(ProfileViewModel.class);
-
+        nameProfile=root.findViewById(R.id.txtName);
+        email=root.findViewById(R.id.txtEmail);
+        pictureProfile=root.findViewById(R.id.imgAvatar);
+        updateUIProfile();
         Button buttonLogout=root.findViewById(R.id.btnLogout);
         TextView historyButton=root.findViewById(R.id.btnHistory);
+        TextView editProfileButton=root.findViewById(R.id.btnEditProfile);
         historyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent=new Intent(getActivity(), HistoryActivity.class);
+                startActivity(intent);
+            }
+        });
+        editProfileButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent=new Intent(getActivity(), EditProfileActivity.class);
                 startActivity(intent);
             }
         });
@@ -64,6 +84,19 @@ public class ProfileFragment extends Fragment {
             startActivity(intent);
             getActivity().finish();
 
+        }
+
+        public void updateUIProfile(){
+            FirebaseUser user=viewModel.getCurrentUser();
+            nameProfile.setText(user.getDisplayName());
+            email.setText(user.getEmail());
+            if(user.getPhotoUrl()!=null){
+                Glide.with(this)
+                        .load(user.getPhotoUrl())
+                        .placeholder(R.drawable.outline_person_24)
+                        .error(R.drawable.outline_person_24)
+                        .into(pictureProfile);
+            }
         }
 }
 

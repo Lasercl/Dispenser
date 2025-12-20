@@ -16,11 +16,13 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.dispenser.R;
 import com.example.dispenser.data.DispenserUtility;
 import com.example.dispenser.data.model.Dispenser;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.card.MaterialCardView;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.Objects;
 
@@ -41,6 +43,8 @@ public class HomeFragment extends Fragment {
     private TextView volumeLiquidTankA;
     private TextView volumeLiquidTankB;
     private ImageView checklist;
+    private ImageView profilePhoto;
+    private TextView nameProfile;
 
     private HomeViewModel mViewModel;
 
@@ -88,6 +92,8 @@ public class HomeFragment extends Fragment {
         nameLiquidTankA=view.findViewById(R.id.tvLabelA);
         nameLiquidTankB=view.findViewById(R.id.tvLabelB);
         checklist=view.findViewById(R.id.imageCheckHome);
+        nameProfile=view.findViewById(R.id.tvUserName);
+        profilePhoto=view.findViewById(R.id.imageProfileHome);
     }
     private void updateDispenserUI(Dispenser dispenser) {
         if (dispenser == null) return;
@@ -171,6 +177,19 @@ public class HomeFragment extends Fragment {
         mViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
         // TODO: Use the ViewModel
         showLastDispenser();
+        updateUiProfileCard();
+
+    }
+    public void updateUiProfileCard(){
+        FirebaseUser user=mViewModel.getCurrentUser();
+        nameProfile.setText(user.getDisplayName());
+        if(user.getPhotoUrl()!=null){
+            Glide.with(this)
+                    .load(user.getPhotoUrl())
+                    .placeholder(R.drawable.outline_person_24)
+                    .error(R.drawable.outline_person_24)
+                    .into(profilePhoto);
+        }
 
     }
 }
