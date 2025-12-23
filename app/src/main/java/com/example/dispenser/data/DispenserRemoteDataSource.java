@@ -7,21 +7,30 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.dispenser.data.model.Dispenser;
+import com.example.dispenser.data.model.HistoryModel;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class DispenserRemoteDataSource {
     private FirebaseDatabase database= FirebaseDatabase.getInstance("https://dispenser-dc485-default-rtdb.asia-southeast1.firebasedatabase.app/");
+    private DatabaseReference powerRef;
+    private ValueEventListener powerListener;
+
 
     private ArrayList<Dispenser> dispenserList=new ArrayList<>();
     private DatabaseReference realtimeRef;
     private ValueEventListener realtimeListener;
+    private Long lastOnTimestamp = null;
+    private Boolean lastPowerState;
+
     public LiveData<Dispenser> listenDispenserRealtime(String deviceId) {
 
         MutableLiveData<Dispenser> realtimeData = new MutableLiveData<>();
@@ -112,8 +121,98 @@ public class DispenserRemoteDataSource {
 
         return liveData;
     }
+
+
     public void updateDispenser(Dispenser dispenser){
         //salahh djangan set valuenya langsung
         database.getReference("dispenser").child(dispenser.getDeviceName()).setValue(dispenser);
+    }
+    public LiveData<Boolean> listenPower(String deviceId) {
+
+        MutableLiveData<Boolean> powerLiveData = new MutableLiveData<>();
+
+        powerRef = database
+                .getReference("dispenser")
+                .child(deviceId)
+                .child("power");
+
+        powerListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Boolean currentPower = snapshot.getValue(Boolean.class);
+                if (currentPower == null) return;
+
+                handlePowerChanged(deviceId, currentPower);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {}
+        };
+
+        powerRef.addValueEventListener(powerListener);
+        return powerLiveData;
+    }
+
+    private void handlePowerChanged(String deviceId, boolean currentPower) {
+
+        // pertama kali listener hidup → init state
+        if (lastPowerState == null) {
+            lastPowerState = currentPower;
+            return;
+        }
+
+        // hanya trigger ON → OFF
+        if (lastPowerState && !currentPower) {
+            fetchDispenserAndSaveHistory(deviceId);
+        }
+
+        lastPowerState = currentPower;
+    }
+    private void fetchDispenserAndSaveHistory(String deviceId) {
+
+        database.getReference("dispenser")
+                .child(deviceId)
+                .get()
+                .addOnSuccessListener(snapshot -> {
+                    Dispenser d = snapshot.getValue(Dispenser.class);
+                    if (d == null) return;
+
+                    long now = System.currentTimeMillis();
+                    long timeUsed = 0;
+
+                    if (d.getLastOnTimeStamp() !=0) {
+                        timeUsed = now - d.getLastOnTimeStamp();
+                    }
+
+                    HistoryModel history = new HistoryModel(
+                            deviceId,
+                            d.getDeviceName(),
+                            d.getUserId(),
+                            false,
+                            d.getVolumeFilledA(),
+                            d.getVolumeFilledB(),
+                            d.getLiquidNameA(),
+                            d.getLiquidNameB(),
+                            d.getWaterLevelTankA(),
+                            d.getWaterLevelTankB(),
+                            d.getBottleCount(),
+                            d.getCurrentBottle(),
+                            timeUsed
+                    );
+
+                    FirebaseFirestore.getInstance()
+                            .collection("UserHistory")
+                            .document(d.getUserId())
+                            .collection("history")
+                            .add(history);
+                });
+    }
+
+
+    public void setDispenserPower(String deviceId, boolean power) {
+        database.getReference("dispenser")
+                .child(deviceId)
+                .child("power")
+                .setValue(power);
     }
 }

@@ -22,6 +22,7 @@ public class Dispenser implements Parcelable {
     private boolean status;
     private int bottleCount;
     private long timeStart;
+    private long lastOnTimeStamp;
 
 
     private boolean power;
@@ -181,6 +182,7 @@ public class Dispenser implements Parcelable {
         parcel.writeString(liquidNameA);
         parcel.writeString(liquidNameB);
         parcel.writeString(category);
+        parcel.writeLong(lastOnTimeStamp);
 
     }
 
@@ -214,5 +216,13 @@ public class Dispenser implements Parcelable {
 
     public void setCurrentBottle(int currentBottle) {
         this.currentBottle = currentBottle;
+    }
+
+    public long getLastOnTimeStamp() {
+        return lastOnTimeStamp;
+    }
+
+    public void setLastOnTimeStamp(long lastOnTimeStamp) {
+        this.lastOnTimeStamp = lastOnTimeStamp;
     }
 }

@@ -6,6 +6,7 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -50,6 +51,7 @@ public class DispenserFragment extends Fragment {
     private TextView scheduleDate;
     private TextView scheduleClock;
     private ImageView checklist;
+    private ImageView powerDevice;
 
 
 
@@ -121,6 +123,7 @@ public class DispenserFragment extends Fragment {
     private void startRealtime(String deviceId) {
         mViewModel.listenDispenser(deviceId)
                 .observe(getViewLifecycleOwner(), this::updateDispenserUI);
+//        mViewModel.listenPower(deviceId);
     }
 
     @Override
@@ -141,6 +144,7 @@ public class DispenserFragment extends Fragment {
         remainingToComplete=view.findViewById(R.id.remainingToComplete);
         liquidTankA=view.findViewById(R.id.nameLiquidTankA);
         liquidTankB=view.findViewById(R.id.nameLiquidTankB);
+        powerDevice=view.findViewById(R.id.powerDevice);
 
 
 
@@ -179,6 +183,13 @@ public class DispenserFragment extends Fragment {
             // checklist.setImageResource(R.drawable.uncheck);
         }
 
+        if (dispenser.isPower()) {
+            powerDevice.setColorFilter(Color.parseColor("#4CAF50")); // Warna Hijau
+
+        } else {
+            powerDevice.setColorFilter(Color.GRAY);
+
+        }
         // Update TextViews
 
         deviceNameUi.setText("Device Name: " + dispenserName);
@@ -198,6 +209,15 @@ public class DispenserFragment extends Fragment {
         numberOfProduction.setText("Number of Production: "+dispenser.getBottleCount());
         productionCompleted.setText("Production Completed: "+dispenser.getCurrentBottle());
         remainingToComplete.setText("Remaining to complete: "+(dispenser.getBottleCount()-dispenser.getCurrentBottle()));
+        powerDevice.setOnClickListener(v->{
+            if (dispenser.isPower()) {
+                mViewModel.updatePowerStatus(dispenser.getDeviceId(), false);
+//                dispenser.setPower(false);
+            } else {
+                mViewModel.updatePowerStatus(dispenser.getDeviceId(), true);
+//                dispenser.setPower(true);
+
+            }});
     }
     private String getScheduleDate(long timeStart) {
         SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM yyyy", Locale.getDefault());
