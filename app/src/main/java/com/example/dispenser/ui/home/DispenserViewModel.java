@@ -14,8 +14,12 @@ import com.example.dispenser.data.model.Dispenser;
 public class DispenserViewModel extends AndroidViewModel {
     private DispenserRepository repo;
     private LiveData<Dispenser> realtimeDispenser;
+    private LiveData<Boolean> realtimePower;
 
 
+    public void updatePowerStatus(String deviceId, boolean power){
+        repo.setDispenserPower(deviceId, power);
+    }
     public DispenserViewModel(@NonNull Application application) {
         super(application);
         // Sekarang kita bisa inisialisasi Repository dengan Application Context
@@ -42,6 +46,11 @@ public class DispenserViewModel extends AndroidViewModel {
         realtimeDispenser = repo.listenDispenser(deviceId);
         return realtimeDispenser;
     }
+    public LiveData<Boolean> listenPower(String deviceId) {
+        realtimePower = repo.listenPower(deviceId);
+        return realtimePower;
+    }
+
 
     // =====================
     // STOP LISTENER

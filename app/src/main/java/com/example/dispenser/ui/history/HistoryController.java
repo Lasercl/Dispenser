@@ -37,6 +37,7 @@ public class HistoryController {
                 db.collection("UserHistory")
                         .document(user.getUid())
                         .collection("history")
+                        .orderBy("timeNow", com.google.firebase.firestore.Query.Direction.DESCENDING)
                         .get()
                         .addOnSuccessListener(snap -> {
                             List<HistoryModel> list = new ArrayList<>();
