@@ -56,10 +56,17 @@ public class DispenserRepository {
     public LiveData<Dispenser> listenDispenser(String deviceId) {
         return remoteDataSource.listenDispenserRealtime(deviceId);
     }
+    public LiveData<Boolean> listenPower(String deviceId) {
+        return remoteDataSource.listenPower(deviceId);
+    }
 
     // STOP LISTENER
     public void stopListenDispenser() {
         remoteDataSource.stopRealtimeListener();
+    }
+
+    public void setDispenserPower(String deviceId, boolean power) {
+        remoteDataSource.setDispenserPower(deviceId, power);
     }
 
 // (Pastikan kamu sudah mengatur Executor/Coroutines untuk menjalankan operasi Room)
