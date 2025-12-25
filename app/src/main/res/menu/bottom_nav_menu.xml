@@ -9,6 +9,14 @@
         android:id="@+id/navigation_dispenser"
         android:icon="@drawable/production"
         android:title="Dispenser"/>
+    <item
+        android:id="@+id/navigation_schedule"
+        android:icon="@drawable/ic_clock"
+        android:title="Schedule"/>
+    <item
+        android:id="@+id/navigation_calibration"
+        android:icon="@drawable/ic_calibration"
+        android:title="Calibration"/>
 
     <item
         android:id="@+id/navigation_profile"

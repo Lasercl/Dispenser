@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="8dp"
+    android:background="@drawable/beaker"> <ImageView
+    android:id="@+id/img_tank_icon"
+    android:layout_width="32dp"
+    android:layout_height="32dp"
+    android:src="@drawable/beaker" />
+
+    <TextView
+        android:id="@+id/tv_tank_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Tank A"
+        android:textSize="10sp"
+        android:textStyle="bold"
+        android:layout_marginTop="4dp"/>
+
+    <TextView
+        android:id="@+id/tv_tank_volume"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="450 ml"
+        android:textColor="@color/black"
+        android:textSize="14sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tv_liquid_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Coffee"
+        android:textSize="11sp" />
+</LinearLayout>
