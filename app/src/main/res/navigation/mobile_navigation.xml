@@ -17,6 +17,18 @@
         android:label="@string/app_name"
         tools:layout="@layout/fragment_dispenser" />
     <fragment
+        android:id="@+id/navigation_schedule"
+        android:name="com.example.dispenser.ui.schedule.list_schedule.ScheduleListFragment"
+        android:label="@string/app_name"
+        tools:layout="@layout/fragment_schedule_list"/>
+    <fragment
+        android:id="@+id/navigation_calibration"
+        android:name="com.example.dispenser.ui.calibration.CalibrationFragment"
+        android:label="@string/app_name"
+        tools:layout="@layout/fragment_calibration"/>
+
+
+    <fragment
         android:id="@+id/navigation_profile"
         android:name="com.example.dispenser.ui.home.ProfileFragment"
         android:label="@string/app_name"

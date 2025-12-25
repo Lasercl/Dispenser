@@ -69,6 +69,8 @@ public class HomeActivity extends AppCompatActivity {
         Set<Integer> topLevelDestinations = new HashSet<>();
         topLevelDestinations.add(R.id.navigation_home);
         topLevelDestinations.add(R.id.navigation_dispenser);
+        topLevelDestinations.add(R.id.navigation_schedule);
+        topLevelDestinations.add(R.id.navigation_calibration);
         topLevelDestinations.add(R.id.navigation_profile);
 
         AppBarConfiguration appBarConfiguration =

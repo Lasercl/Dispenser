@@ -411,3 +411,222 @@
     app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+<!--    <?xml version="1.0" encoding="utf-8"?>-->
+<!--<androidx.constraintlayout.widget.ConstraintLayout-->
+<!--xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--xmlns:app="http://schemas.android.com/apk/res-auto"-->
+<!--xmlns:tools="http://schemas.android.com/tools"-->
+<!--android:layout_width="match_parent"-->
+<!--android:layout_height="match_parent"-->
+<!--android:background="@drawable/bg_app_gradient">-->
+
+<!--<include android:id="@+id/layoutToolbar"-->
+<!--    app:layout_constraintTop_toTopOf="parent"-->
+<!--    layout="@layout/custom_toolbar_dispenser" />-->
+
+<!--<androidx.cardview.widget.CardView-->
+<!--    android:id="@+id/fragment_container"-->
+<!--    android:layout_width="0dp"-->
+<!--    android:layout_height="0dp"-->
+<!--    android:layout_marginTop="5dp"-->
+<!--    android:layout_marginHorizontal="2dp"-->
+<!--    app:cardCornerRadius="12dp"-->
+<!--    app:cardElevation="4dp"-->
+<!--    app:layout_constraintWidth_percent="0.85"-->
+<!--    app:layout_constraintHeight_percent="0.82"-->
+<!--    app:layout_constraintEnd_toEndOf="parent"-->
+<!--    app:layout_constraintStart_toStartOf="parent"-->
+<!--    app:layout_constraintBottom_toTopOf="@id/btn_create_schedule"-->
+<!--    app:layout_constraintTop_toBottomOf="@id/layoutToolbar">-->
+
+<!--    <LinearLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        android:background="@android:color/white"-->
+<!--        android:orientation="vertical"-->
+<!--        android:padding="16dp">-->
+
+<!--        <TextView-->
+<!--            android:id="@+id/deviceInUse"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="Device in Use:"-->
+<!--            android:textColor="@android:color/black"-->
+<!--            android:textStyle="bold" />-->
+
+<!--        <TextView-->
+<!--            android:id="@+id/deviceName"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginTop="4dp"-->
+<!--            android:text="Matt &amp; Laser Machina"-->
+<!--            android:textColor="@android:color/black" />-->
+
+<!--        <androidx.cardview.widget.CardView-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginTop="10dp"-->
+<!--            app:cardBackgroundColor="#FFF3E0"-->
+<!--            app:cardCornerRadius="8dp"-->
+<!--            app:cardElevation="0dp">-->
+<!--            <LinearLayout-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:gravity="center_vertical"-->
+<!--                android:padding="8dp">-->
+<!--                <ImageView-->
+<!--                    android:layout_width="16dp"-->
+<!--                    android:layout_height="16dp"-->
+<!--                    android:src="@drawable/ic_info"-->
+<!--                    app:tint="#E65100" />-->
+<!--                <TextView-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_marginStart="8dp"-->
+<!--                    android:text="Akurasi takaran bergantung pada Kalibrasi Pompa."-->
+<!--                    android:textColor="#E65100"-->
+<!--                    android:textSize="10sp"-->
+<!--                    android:textStyle="bold" />-->
+<!--            </LinearLayout>-->
+<!--        </androidx.cardview.widget.CardView>-->
+
+<!--        <LinearLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginTop="12dp"-->
+<!--            android:gravity="center"-->
+<!--            android:orientation="horizontal">-->
+<!--            <ImageView-->
+<!--                android:id="@+id/imgDevice"-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="130dp"-->
+<!--                android:layout_weight="1"-->
+<!--                android:src="@drawable/dispenser" />-->
+<!--            <ImageView-->
+<!--                android:id="@+id/imgCheck"-->
+<!--                android:layout_width="35dp"-->
+<!--                android:layout_height="35dp"-->
+<!--                android:layout_marginStart="16dp"-->
+<!--                android:src="@drawable/notcheck" />-->
+<!--        </LinearLayout>-->
+
+<!--        <ScrollView-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:fillViewport="true">-->
+
+<!--            <LinearLayout-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:orientation="vertical">-->
+
+<!--                <LinearLayout-->
+<!--                    android:id="@+id/layout_category"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:orientation="vertical"-->
+<!--                    android:background="@android:color/holo_orange_light"-->
+<!--                    android:padding="12dp"-->
+<!--                    android:layout_marginTop="8dp"-->
+<!--                    android:clickable="true"-->
+<!--                    android:focusable="true">-->
+
+<!--                    <TextView-->
+<!--                        android:id="@+id/label_category_dispenser"-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:text="Select Recipe ▼"-->
+<!--                        android:textColor="@android:color/black"-->
+<!--                        android:textSize="14sp"-->
+<!--                        android:textStyle="bold"-->
+<!--                        android:layout_gravity="center_horizontal" />-->
+
+<!--                    <LinearLayout-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:orientation="horizontal"-->
+<!--                        android:weightSum="2"-->
+<!--                        android:layout_marginTop="8dp">-->
+<!--                        <TextView android:id="@+id/waterFilledLiquidA" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="A: - ml" android:gravity="center" android:textColor="@android:color/black" android:textSize="12sp" />-->
+<!--                        <TextView android:id="@+id/waterFilledLiquidB" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="B: - ml" android:gravity="center" android:textColor="@android:color/black" android:textSize="12sp" />-->
+<!--                    </LinearLayout>-->
+<!--                </LinearLayout>-->
+
+<!--                <LinearLayout-->
+<!--                    android:id="@+id/layout_details"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:orientation="horizontal"-->
+<!--                    android:weightSum="2"-->
+<!--                    android:background="@android:color/holo_orange_light"-->
+<!--                    android:layout_marginTop="2dp"-->
+<!--                    android:padding="10dp">-->
+
+<!--                    <LinearLayout-->
+<!--                        android:layout_width="0dp"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_weight="1"-->
+<!--                        android:orientation="vertical">-->
+<!--                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Liquid Tank" android:textStyle="bold" android:textColor="@android:color/black" android:textSize="13sp"/>-->
+<!--                        <TextView android:id="@+id/numberTankLiquidA" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="A: 400ml" android:textSize="11sp" android:textColor="@android:color/black"/>-->
+<!--                        <TextView android:id="@+id/nameLiquidTankA" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Coffee" android:textSize="10sp"/>-->
+<!--                        <TextView android:id="@+id/numberTankLiquidB" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="B: 400ml" android:textSize="11sp" android:textColor="@android:color/black"/>-->
+<!--                        <TextView android:id="@+id/nameLiquidTankB" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Milk" android:textSize="10sp"/>-->
+<!--                    </LinearLayout>-->
+
+<!--                    <LinearLayout-->
+<!--                        android:layout_width="0dp"-->
+<!--                        android:layout_height="match_parent"-->
+<!--                        android:layout_weight="1"-->
+<!--                        android:gravity="center"-->
+<!--                        android:orientation="vertical">-->
+<!--                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="System Status" android:textStyle="bold" android:textColor="@android:color/black" android:textSize="13sp"/>-->
+<!--                        <TextView android:id="@+id/scheduleDate" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Connected" android:textColor="#4CAF50" android:textSize="11sp"/>-->
+<!--                        <TextView android:id="@+id/scheduleClock" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Ready to Pour" android:textSize="10sp"/>-->
+<!--                    </LinearLayout>-->
+<!--                </LinearLayout>-->
+
+<!--                <LinearLayout-->
+<!--                    android:id="@+id/layout_production"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_marginTop="2dp"-->
+<!--                    android:background="@android:color/holo_orange_light"-->
+<!--                    android:gravity="center_horizontal"-->
+<!--                    android:orientation="vertical"-->
+<!--                    android:padding="12dp">-->
+
+<!--                    <TextView android:id="@+id/numberOfProduction" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Total Production: 10" android:textColor="@android:color/black" android:textSize="12sp" />-->
+<!--                    <TextView android:id="@+id/productionCompleted" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Completed: 4" android:textColor="@android:color/black" android:textSize="12sp" />-->
+<!--                    <TextView android:id="@+id/remainingToComplete" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Remaining: 6" android:textColor="@android:color/black" android:textSize="12sp" />-->
+
+<!--                    <ImageView-->
+<!--                        android:id="@+id/powerDevice"-->
+<!--                        android:layout_width="45dp"-->
+<!--                        android:layout_height="45dp"-->
+<!--                        android:layout_marginTop="8dp"-->
+<!--                        android:src="@drawable/on" />-->
+<!--                </LinearLayout>-->
+<!--            </LinearLayout>-->
+<!--        </ScrollView>-->
+<!--    </LinearLayout>-->
+<!--</androidx.cardview.widget.CardView>-->
+
+<!--<Button-->
+<!--    android:id="@+id/btn_create_schedule"-->
+<!--    android:layout_width="wrap_content"-->
+<!--    android:layout_height="wrap_content"-->
+<!--    android:text="View &amp; Create Schedule"-->
+<!--    android:textColor="@android:color/white"-->
+<!--    android:backgroundTint="#FFA07A"-->
+<!--    android:paddingStart="24dp"-->
+<!--    android:paddingEnd="24dp"-->
+<!--    app:layout_constraintBottom_toBottomOf="parent"-->
+<!--    app:layout_constraintEnd_toEndOf="parent"-->
+<!--    app:layout_constraintStart_toStartOf="parent"-->
+<!--    android:layout_marginBottom="16dp" />-->
+
+<!--</androidx.constraintlayout.widget.ConstraintLayout>-->

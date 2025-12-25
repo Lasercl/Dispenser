@@ -20,6 +20,7 @@ public class PresetModel {
     private int volumeB;
 
     // Kontruktor
+    public PresetModel() {}
     public PresetModel(String id,String namePresets, String createdBy, String liquidA, String liquidB, int volumeA, int volumeB) {
         this.id = id;
         this.namePresets=namePresets;
@@ -45,5 +46,33 @@ public class PresetModel {
 
     public String getNamePresets() {
         return namePresets;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setLiquidA(String liquidA) {
+        this.liquidA = liquidA;
+    }
+
+    public void setLiquidB(String liquidB) {
+        this.liquidB = liquidB;
+    }
+
+    public void setNamePresets(String namePresets) {
+        this.namePresets = namePresets;
+    }
+
+    public void setVolumeA(int volumeA) {
+        this.volumeA = volumeA;
+    }
+
+    public void setVolumeB(int volumeB) {
+        this.volumeB = volumeB;
     }
 }

@@ -5,6 +5,7 @@ import android.app.Application;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 
 import com.example.dispenser.data.DispenserDao;
@@ -12,12 +13,18 @@ import com.example.dispenser.data.DispenserDatabase;
 import com.example.dispenser.data.DispenserRepository;
 import com.example.dispenser.data.PresetModel;
 import com.example.dispenser.data.model.Dispenser;
+import com.example.dispenser.data.model.ScheduleRTDB;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.Single;
 
 import java.text.ParseException;
@@ -171,5 +178,137 @@ public class ScheduleController {
                     Log.e(TAG, "Error saving preset", e);
 //                    Toast.makeText(this, "Gagal menyimpan resep: " + e.getMessage(), Toast.LENGTH_LONG).show();
                 });
+    }
+
+    public void confirmScheduleRTDB(String deviceId, int index, PresetModel preset,
+                                    int hour, int minute, int dowMask, int count) {
+
+        // Path: /dispenser/DEVICE123/schedules/0
+        DatabaseReference ref = rtdbRef
+                .child(deviceId)
+                .child("schedules")
+                .child(String.valueOf(index));
+
+        // Buat Map data yang sesuai dengan struct Schedule di ESP32
+        Map<String, Object> scheduleData = new HashMap<>();
+        scheduleData.put("enabled", 1);          // Langsung aktifkan
+        scheduleData.put("hour", hour);
+        scheduleData.put("minute", minute);
+        scheduleData.put("dowMask", dowMask);    // Hasil hitungan bitmask hari
+        scheduleData.put("categoryName", preset.getNamePresets());
+        scheduleData.put("volA", preset.getVolumeA());
+        scheduleData.put("volB", preset.getVolumeB());
+        scheduleData.put("count", count);
+
+        // Kirim ke Firebase RTDB
+        ref.setValue(scheduleData)
+                .addOnSuccessListener(aVoid -> {
+                    // Berhasil
+                })
+                .addOnFailureListener(e -> {
+                    // Gagal
+                });
+    }
+    public Observable<List<ScheduleRTDB>> getAllSchedulesRx(String deviceId) {
+        return Observable.create(emitter -> {
+            ValueEventListener listener = new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot snapshot) {
+                    List<ScheduleRTDB> list = new ArrayList<>();
+                    for (DataSnapshot slot : snapshot.getChildren()) {
+                        ScheduleRTDB s = slot.getValue(ScheduleRTDB.class);
+                        if (s != null) {
+                            s.setKey(slot.getKey()); // Mengambil "0", "1", dst dari Firebase
+                            list.add(s);
+                        }
+                    }
+                    if (!emitter.isDisposed()) {
+                        emitter.onNext(list);
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError error) {
+                    if (!emitter.isDisposed()) {
+                        emitter.onError(error.toException());
+                    }
+                }
+            };
+
+            // Menempelkan listener ke Firebase
+            DatabaseReference scheduleRef = rtdbRef.child(deviceId).child("schedules");
+            scheduleRef.addValueEventListener(listener);
+
+            // Membersihkan listener jika Rx disposes (mencegah memory leak)
+            emitter.setCancellable(() -> scheduleRef.removeEventListener(listener));
+        });
+    }/**
+     * Melakukan penyimpanan data ke slot index tertentu di RTDB
+     */
+    public void saveToRTDB(String deviceId, int index, PresetModel preset, int h, int m, int mask, int count) {
+        // Path: dispenser/DEVICE123/schedules/0
+        DatabaseReference ref = rtdbRef.child(deviceId).child("schedules").child(String.valueOf(index));
+
+        // Bungkus data dalam HashMap agar struktur di Firebase rapi
+        Map<String, Object> data = new HashMap<>();
+        data.put("enabled", 1);
+        data.put("hour", h);
+        data.put("minute", m);
+        data.put("dowMask", mask);
+        data.put("categoryName", preset.getNamePresets());
+        data.put("volA", preset.getVolumeA());
+        data.put("volB", preset.getVolumeB());
+        data.put("count", count);
+
+        // Kirim ke Firebase
+        ref.setValue(data).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                Log.d("FIREBASE_SAVE", "Berhasil menyimpan di slot: " + index);
+            } else {
+                Log.e("FIREBASE_SAVE", "Gagal simpan", task.getException());
+            }
+        });
+    }
+    public Observable<ScheduleRTDB> getSingleScheduleRx(String deviceId, int index) {
+        return Observable.create(emitter -> {
+            rtdbRef.child(deviceId).child("schedules").child(String.valueOf(index))
+                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            ScheduleRTDB s = snapshot.getValue(ScheduleRTDB.class);
+                            if (s != null) emitter.onNext(s);
+                            emitter.onComplete();
+                        }
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+                            emitter.onError(error.toException());
+                        }
+                    });
+        });
+    }
+    public void findEmptySlotAndSave(String deviceId, PresetModel preset, int h, int m, int mask, int count) {
+        DatabaseReference ref = rtdbRef.child(deviceId).child("schedules");
+
+        // Ambil data schedules dulu untuk cek mana yang kosong
+        ref.get().addOnSuccessListener(snapshot -> {
+            int targetSlot = -1;
+
+            // Cek slot 0 sampai 7
+            for (int i = 0; i < 8; i++) {
+                if (!snapshot.child(String.valueOf(i)).exists() ||
+                        Long.parseLong(snapshot.child(String.valueOf(i)).child("enabled").getValue().toString()) == 0) {
+                    targetSlot = i;
+                    break; // Ketemu slot kosong atau non-aktif
+                }
+            }
+
+            if (targetSlot != -1) {
+                // Simpan ke slot yang ketemu kosong tadi
+                confirmScheduleRTDB(deviceId, targetSlot, preset, h, m, mask, count);
+            } else {
+                // Semua slot (0-7) penuh
+                // Kamu bisa tambahkan callback ke Activity untuk kasih Toast "Jadwal Penuh"
+            }
+        });
     }
 }
