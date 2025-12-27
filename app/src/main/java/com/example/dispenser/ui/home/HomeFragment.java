@@ -184,14 +184,19 @@ public class HomeFragment extends Fragment {
         mViewModel.setLogged();
         if(mViewModel.islogged()){
             FirebaseUser user=mViewModel.getCurrentUser();
-            nameProfile.setText(user.getDisplayName());
-            if(user.getPhotoUrl()!=null){
-                Glide.with(this)
-                        .load(user.getPhotoUrl())
-                        .placeholder(R.drawable.outline_person_24)
-                        .error(R.drawable.outline_person_24)
-                        .into(profilePhoto);
+            if(user.getDisplayName()!=null){
+                nameProfile.setText(user.getDisplayName());
+                if(user.getPhotoUrl()!=null){
+                    Glide.with(this)
+                            .load(user.getPhotoUrl())
+                            .placeholder(R.drawable.outline_person_24)
+                            .error(R.drawable.outline_person_24)
+                            .into(profilePhoto);
+                }
+            }else {
+                nameProfile.setText("-");
             }
+
         }
 
     }
