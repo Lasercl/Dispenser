@@ -1,5 +1,7 @@
 package com.example.dispenser.data;
 
+import static android.content.ContentValues.TAG;
+
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -8,16 +10,20 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.example.dispenser.data.model.Dispenser;
 import com.example.dispenser.data.model.HistoryModel;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class DispenserRemoteDataSource {
     private FirebaseDatabase database= FirebaseDatabase.getInstance("https://dispenser-dc485-default-rtdb.asia-southeast1.firebasedatabase.app/");
@@ -30,6 +36,7 @@ public class DispenserRemoteDataSource {
     private ValueEventListener realtimeListener;
     private Long lastOnTimestamp = null;
     private Boolean lastPowerState;
+    private FirebaseUser user=FirebaseAuth.getInstance().getCurrentUser();
 
     public LiveData<Dispenser> listenDispenserRealtime(String deviceId) {
 
@@ -214,5 +221,86 @@ public class DispenserRemoteDataSource {
                 .child(deviceId)
                 .child("power")
                 .setValue(power);
+    }
+
+    public void savePresetToFirestore(String name, int vA, int vB, String liquidA, String liquidB) {
+            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+            if (user == null) {
+//            Toast.makeText(this, "Anda harus login untuk menyimpan resep.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+            Map<String, Object> presetData = new HashMap<>();
+            // Gunakan categoryName sebagai nama dokumen atau field tambahan di sini
+            presetData.put("namePresets", name); // Tambahkan field nama agar mudah dibaca
+            presetData.put("createdBy", user.getUid());
+            presetData.put("liquidA", liquidA);
+            presetData.put("liquidB", liquidB);
+            presetData.put("volumeA", vA);
+            presetData.put("volumeB", vB);
+
+            db.collection("presets")
+                    .add(presetData)
+                    .addOnSuccessListener(documentReference -> {
+//                    Toast.makeText(this, "Resep " + categoryName + " berhasil disimpan!", Toast.LENGTH_SHORT).show();
+                    })
+                    .addOnFailureListener(e -> {
+                        Log.e(TAG, "Error saving preset", e);
+//                    Toast.makeText(this, "Gagal menyimpan resep: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                    });
+
+    }
+
+    public LiveData<List<PresetModel>> getAllPresets() {
+        MutableLiveData<List<PresetModel>> liveData = new MutableLiveData<>();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        db.collection("presets")
+                .whereEqualTo("createdBy", user.getUid())
+                .addSnapshotListener((value, error) -> {
+                    if (error != null) {
+                        Log.e("Firestore", "Listen failed.", error);
+                        return;
+                    }
+
+                    List<PresetModel> presets = new ArrayList<>();
+                    if (value != null) {
+                        for (DocumentSnapshot document : value.getDocuments()) {
+                            try {
+                                String id = document.getId();
+                                String namePreset = document.getString("namePresets");
+                                String createdBy = document.getString("createdBy");
+                                String liquidA = document.getString("liquidA");
+                                String liquidB = document.getString("liquidB");
+
+                                // Gunakan safe null check untuk Integer
+                                Integer volA = document.getLong("volumeA") != null ? document.getLong("volumeA").intValue() : 0;
+                                Integer volB = document.getLong("volumeB") != null ? document.getLong("volumeB").intValue() : 0;
+
+                                presets.add(new PresetModel(id, namePreset, createdBy, liquidA, liquidB, volA, volB));
+                            } catch (Exception e) {
+                                Log.e("Firestore", "Error parsing: " + e.getMessage());
+                            }
+                        }
+                    }
+                    liveData.setValue(presets);
+                });
+
+        return liveData;
+    }
+
+    public void updateSelectedRecipe(String deviceId, String namePresets, String liquidA, String liquidB, int volumeA, int volumeB) {
+        database.getReference("dispenser")
+                .child(deviceId).child("category").setValue(namePresets);
+        database.getReference("dispenser")
+                .child(deviceId).child("liquidNameA").setValue(liquidA);
+        database.getReference("dispenser")
+                .child(deviceId).child("liquidNameB").setValue(liquidB);
+        database.getReference("dispenser")
+                .child(deviceId).child("volumeFilledA").setValue(volumeA);
+        database.getReference("dispenser")
+                .child(deviceId).child("volumeFilledB").setValue(volumeB);
     }
 }

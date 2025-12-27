@@ -13,11 +13,15 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.text.InputType;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -25,9 +29,14 @@ import android.widget.Toast;
 
 import com.example.dispenser.R;
 import com.example.dispenser.data.DispenserUtility;
+import com.example.dispenser.data.PresetModel;
 import com.example.dispenser.data.model.Dispenser;
 import com.example.dispenser.ui.dispenser.DispenserDetailActivity;
 import com.example.dispenser.ui.schedule.ScheduleActivity;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -50,8 +59,11 @@ public class DispenserFragment extends Fragment {
     private TextView deviceWaterLevelUiB;
     private TextView scheduleDate;
     private TextView scheduleClock;
+    private TextView statusDispenser;
     private ImageView checklist;
     private ImageView powerDevice;
+    private PresetModel presetModelGlobal; // Untuk menyimpan resep yang dipilih user
+
 
 
 
@@ -96,13 +108,17 @@ public class DispenserFragment extends Fragment {
             // Tampilkan dialog fragment
             listDispenserFragment.show(getParentFragmentManager(), "AddDispenser");
         });
+        HomeActivity main = (HomeActivity) getActivity();
 
 
 
         Button schedule=root.findViewById(R.id.btn_create_schedule);
         schedule.setOnClickListener(view -> {
-           Intent intent=new Intent(getActivity(), ScheduleActivity.class);
-           startActivity(intent);
+//           Intent intent=new Intent(getActivity(), ScheduleActivity.class);
+//           startActivity(intent);
+            BottomNavigationView bottomNav = main.findViewById(R.id.bottom_navigation);
+            bottomNav.setSelectedItemId(R.id.navigation_schedule);
+
         });
 
         return root;
@@ -137,8 +153,10 @@ public class DispenserFragment extends Fragment {
         categoryLabel=view.findViewById(R.id.label_category_dispenser);
         deviceWaterLevelUiA = view.findViewById(R.id.numberTankLiquidA);
         deviceWaterLevelUiB = view.findViewById(R.id.numberTankLiquidB);
-        scheduleDate = view.findViewById(R.id.scheduleDate);
-        scheduleClock = view.findViewById(R.id.scheduleClock);
+
+//        scheduleDate = view.findViewById(R.id.scheduleDate);
+//        scheduleClock = view.findViewById(R.id.scheduleClock);
+        statusDispenser=view.findViewById(R.id.status);
         numberOfProduction=view.findViewById(R.id.numberOfProduction);
         productionCompleted=view.findViewById(R.id.productionCompleted);
         remainingToComplete=view.findViewById(R.id.remainingToComplete);
@@ -146,9 +164,61 @@ public class DispenserFragment extends Fragment {
         liquidTankB=view.findViewById(R.id.nameLiquidTankB);
         powerDevice=view.findViewById(R.id.powerDevice);
 
+// Tambahkan di dalam onViewCreated atau di mana kamu init view
+        View containerTarget = view.findViewById(R.id.container_target_edit);
+        TextView tvTarget = view.findViewById(R.id.numberOfProduction);
 
+        containerTarget.setOnClickListener(v -> {
+            // Buat input angka
+            final EditText input = new EditText(getContext());
+            input.setInputType(InputType.TYPE_CLASS_NUMBER);
+            input.setHint("Target");
+            input.setGravity(Gravity.CENTER);
 
+            // Beri jarak (padding) agar EditText tidak nempel ke pinggir dialog
+            FrameLayout container = new FrameLayout(getContext());
+            FrameLayout.LayoutParams params = new  FrameLayout.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT
+            );
+            params.leftMargin = 50; params.rightMargin = 50;
+            input.setLayoutParams(params);
+            container.addView(input);
 
+            new MaterialAlertDialogBuilder(getContext())
+                    .setTitle("Set Target Produksi")
+                    .setMessage("Masukkan jumlah botol yang ingin diproduksi:")
+                    .setView(container)
+                    .setPositiveButton("Simpan", (dialog, which) -> {
+                        String val = input.getText().toString();
+                        if (!val.isEmpty()) {
+                            int target = Integer.parseInt(val);
+                            tvTarget.setText("Target: " + target);
+
+                            // Update sisa botol di UI juga agar sinkron
+                            TextView tvRemaining = view.findViewById(R.id.remainingToComplete);
+                            tvRemaining.setText("Remaining: " + target);
+                        }
+                    })
+                    .setNegativeButton("Batal", null)
+                    .show();
+        });
+
+// Cari View Kategori
+        View layoutCategory = view.findViewById(R.id.layout_category);
+        ImageView btnAddRecipe = view.findViewById(R.id.btn_add_preset_home);
+
+// 1. Klik area oranye untuk pilih resep (PopupMenu)
+        layoutCategory.setOnClickListener(v -> {
+            showPresetPopupMenu(v);
+        });
+
+// 2. Klik icon plus untuk tambah resep (Material Dialog)
+        if (btnAddRecipe != null) {
+            btnAddRecipe.setOnClickListener(v -> {
+                showAddRecipeDialog();
+            });
+        }
 
 
 
@@ -166,6 +236,60 @@ public class DispenserFragment extends Fragment {
                 });
 
     }
+    private void showPresetPopupMenu(View anchor) {
+        androidx.appcompat.widget.PopupMenu popup = new androidx.appcompat.widget.PopupMenu(requireContext(), anchor);
+
+        // Ambil data resep dari ViewModel/Firestore
+        mViewModel.getAllPresets().observe(getViewLifecycleOwner(), presets -> {
+            for (int i = 0; i < presets.size(); i++) {
+                popup.getMenu().add(0, i, i, presets.get(i).getNamePresets());
+            }
+
+            popup.setOnMenuItemClickListener(item -> {
+                presetModelGlobal = presets.get(item.getItemId());
+
+                // Update UI dashboard dengan resep yang dipilih
+                String deviceId = mViewModel.getDispenserLastId();
+                if (deviceId != null) {
+                    mViewModel.updateSelectedRecipe(
+                            deviceId,
+                            presetModelGlobal.getNamePresets(),
+                            presetModelGlobal.getLiquidA(),
+                            presetModelGlobal.getLiquidB(),
+                            presetModelGlobal.getVolumeA(),
+                            presetModelGlobal.getVolumeB()
+                    );
+                }
+                return true;
+            });
+            popup.show();
+        });
+    }
+    private void showAddRecipeDialog() {
+        View dialogView = getLayoutInflater().inflate(R.layout.dialog_add_category, null);
+        EditText etName = dialogView.findViewById(R.id.edit_category);
+        EditText etVolA = dialogView.findViewById(R.id.edit_volume_a);
+        EditText etVolB = dialogView.findViewById(R.id.edit_volume_b);
+        EditText etNameA=dialogView.findViewById(R.id.edit_liquid_a);
+        EditText etNameB=dialogView.findViewById(R.id.edit_liquid_b);
+
+        new MaterialAlertDialogBuilder(getContext())
+                .setTitle("Tambah Resep Baru")
+                .setView(dialogView)
+                .setPositiveButton("Simpan", (dialog, which) -> {
+                    String name = etName.getText().toString();
+                    int vA = Integer.parseInt(etVolA.getText().toString());
+                    int vB = Integer.parseInt(etVolB.getText().toString());
+                    String liquidA=etNameA.getText().toString();
+                    String liquidB=etNameB.getText().toString();
+
+                    // Panggil ViewModel untuk simpan ke Firestore
+                    mViewModel.savePresetToFirestore(name, vA, vB, liquidA, liquidB);
+                    Toast.makeText(getContext(), "Resep berhasil disimpan", Toast.LENGTH_SHORT).show();
+                })
+                .setNegativeButton("Batal", null)
+                .show();
+    }
     private void updateDispenserUI(Dispenser dispenser) {
         if (dispenser == null) return;
         String liquidA=dispenser.getLiquidNameA()+ ": "+dispenser.getVolumeFilledA()+" ml";
@@ -174,6 +298,17 @@ public class DispenserFragment extends Fragment {
         String dispenserName = dispenser.getDeviceName();
         String dispenserStatus = DispenserUtility.getStatus(dispenser.getStatus());
         int waterlevelTankA = dispenser.getWaterLevelTankA();
+        FirebaseUser user= FirebaseAuth.getInstance().getCurrentUser();
+        // Pastikan user tidak null sebelum mengambil UID
+        if (user != null) {
+            if (dispenserStatus.equalsIgnoreCase("UnAvailable") || user.getUid().equals(dispenser.getUserId())) {
+                statusDispenser.setText("Connected");
+                statusDispenser.setTextColor(Color.parseColor("#4CAF50")); // Hijau
+            } else {
+                statusDispenser.setText("Not Connected");
+                statusDispenser.setTextColor(Color.RED); // Atau Color.parseColor("#F44336")
+            }
+        }
 
         // Checklist/Status Icon
         if (dispenserStatus.equalsIgnoreCase("Available") || dispenser.getUserId() != null) {
@@ -194,17 +329,25 @@ public class DispenserFragment extends Fragment {
 
         deviceNameUi.setText("Device Name: " + dispenserName);
         deviceInUseUi.setText("Device in Use:");
-        scheduleDate.setText(getScheduleDate(dispenser.getTimeStart()));
-        scheduleClock.setText(getScheduleTime(dispenser.getTimeStart()));
+//        scheduleDate.setText(getScheduleDate(dispenser.getTimeStart()));
+//        scheduleClock.setText(getScheduleTime(dispenser.getTimeStart()));
         liquidAFill.setText(liquidA);
         liquidBFill.setText(liquidB);
-        categoryLabel.setText("Category: "+categoryName);
+        if(categoryName!=null){
+            categoryLabel.setText("Category: "+categoryName);
+
+        }else{
+//            categoryLabel.setText("Category: "+"Tap here to Choose Category");
+
+        }
         // Asumsi Tank A
         liquidTankA.setText(dispenser.getLiquidNameA());
         deviceWaterLevelUiA.setText(waterlevelTankA + " ml");
         // Asumsi Tank B
         liquidTankB.setText(dispenser.getLiquidNameB());
         deviceWaterLevelUiB.setText(dispenser.getWaterLevelTankB() + " ml");
+        //ui tank
+        updateWaterLevels(dispenser.getWaterLevelTankA(),dispenser.getWaterLevelTankB());
         //production
         numberOfProduction.setText("Number of Production: "+dispenser.getBottleCount());
         productionCompleted.setText("Production Completed: "+dispenser.getCurrentBottle());
@@ -218,6 +361,24 @@ public class DispenserFragment extends Fragment {
 //                dispenser.setPower(true);
 
             }});
+    }
+    private void updateWaterLevels(int volA, int volB) {
+        // Misalnya kapasitas tanki asli bapak adalah 1000ml
+        int maxVolume = 100;
+
+        // Hitung persentase untuk Tank A
+        int levelA = (int) (((float) volA / maxVolume) * 10000);
+        ImageView fillA = getView().findViewById(R.id.img_beaker_fill_a);
+        fillA.setImageLevel(levelA);
+
+        // Hitung persentase untuk Tank B
+        int levelB = (int) (((float) volB / maxVolume) * 10000);
+        ImageView fillB = getView().findViewById(R.id.img_beaker_fill_b);
+        fillB.setImageLevel(levelB);
+
+        // Logika Warna: Jika di bawah 10% (1000), ubah jadi merah
+        if (levelA < 1000) fillA.setColorFilter(Color.RED);
+        else fillA.setColorFilter(Color.parseColor("#FB8C00"));
     }
     private String getScheduleDate(long timeStart) {
         SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM yyyy", Locale.getDefault());

@@ -9,7 +9,10 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.dispenser.data.AddDispenserRepository;
 import com.example.dispenser.data.DispenserRepository;
+import com.example.dispenser.data.PresetModel;
 import com.example.dispenser.data.model.Dispenser;
+
+import java.util.List;
 
 public class DispenserViewModel extends AndroidViewModel {
     private DispenserRepository repo;
@@ -59,6 +62,18 @@ public class DispenserViewModel extends AndroidViewModel {
     protected void onCleared() {
         super.onCleared();
         repo.stopListenDispenser();
+    }
+
+    public void savePresetToFirestore(String name, int vA, int vB, String liquidA, String liquidB) {
+        repo.savePresetToFirestore(name, vA, vB, liquidA, liquidB);
+    }
+
+    public LiveData<List<PresetModel>>getAllPresets() {
+        return repo.getAllPresets();
+    }
+
+    public void updateSelectedRecipe(String deviceId, String namePresets, String liquidA, String liquidB, int volumeA, int volumeB) {
+        repo.updateSelectedRecipe(deviceId, namePresets, liquidA, liquidB, volumeA, volumeB);
     }
     // TODO: Implement the ViewModel
 }

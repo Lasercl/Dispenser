@@ -7,6 +7,8 @@ import androidx.lifecycle.LiveData;
 
 import com.example.dispenser.data.model.Dispenser;
 
+import java.util.List;
+
 public class DispenserRepository {
     // Di DispenserRepository.java
 
@@ -67,6 +69,18 @@ public class DispenserRepository {
 
     public void setDispenserPower(String deviceId, boolean power) {
         remoteDataSource.setDispenserPower(deviceId, power);
+    }
+
+    public void savePresetToFirestore(String name, int vA, int vB, String liquidA, String liquidB) {
+        remoteDataSource.savePresetToFirestore(name, vA, vB, liquidA, liquidB);
+    }
+
+    public LiveData<List<PresetModel>> getAllPresets() {
+        return remoteDataSource.getAllPresets();
+    }
+
+    public void updateSelectedRecipe(String deviceId, String namePresets, String liquidA, String liquidB, int volumeA, int volumeB) {
+        remoteDataSource.updateSelectedRecipe(deviceId, namePresets, liquidA, liquidB, volumeA, volumeB);
     }
 
 // (Pastikan kamu sudah mengatur Executor/Coroutines untuk menjalankan operasi Room)
