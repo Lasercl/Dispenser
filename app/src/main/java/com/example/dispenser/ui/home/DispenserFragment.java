@@ -342,10 +342,10 @@ public class DispenserFragment extends Fragment {
         }
         // Asumsi Tank A
         liquidTankA.setText(dispenser.getLiquidNameA());
-        deviceWaterLevelUiA.setText(waterlevelTankA + " ml");
+        deviceWaterLevelUiA.setText(waterlevelTankA + " %");
         // Asumsi Tank B
         liquidTankB.setText(dispenser.getLiquidNameB());
-        deviceWaterLevelUiB.setText(dispenser.getWaterLevelTankB() + " ml");
+        deviceWaterLevelUiB.setText(dispenser.getWaterLevelTankB() + " %");
         //ui tank
         updateWaterLevels(dispenser.getWaterLevelTankA(),dispenser.getWaterLevelTankB());
         //production
