@@ -41,10 +41,6 @@ public class ScheduleController {
     private DispenserDao dispenserDao;
 
 
-// --- Di dalam Activity atau Repository Class Anda ---
-    // Di ScheduleController.java
-
-// ... (Di bawah inisialisasi TAG dan rtdbRef) ...
     private DatabaseReference rtdbRef = FirebaseDatabase.getInstance("https://dispenser-dc485-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("dispenser");
     private DispenserRepository repository;
     public ScheduleController(Application application){
@@ -85,12 +81,7 @@ public class ScheduleController {
 
         return calendar.getTimeInMillis();
     }
-    // ...
-//    public LiveData<Dispenser> getLastDispenser() {
-//
-//        // Asumsi DAO punya query untuk mengambil data terakhir
-//        return repository.getLastDispenser();
-//    }
+
     public String getDispenserLastId(){
         return repository.getDispenserLastId();
     }
@@ -199,6 +190,8 @@ public class ScheduleController {
         scheduleData.put("volA", preset.getVolumeA());
         scheduleData.put("volB", preset.getVolumeB());
         scheduleData.put("count", count);
+        scheduleData.put("liquidNameA",preset.getLiquidA());
+        scheduleData.put("liquidNameB",preset.getLiquidB());
 
         // Kirim ke Firebase RTDB
         ref.setValue(scheduleData)
@@ -259,6 +252,8 @@ public class ScheduleController {
         data.put("volA", preset.getVolumeA());
         data.put("volB", preset.getVolumeB());
         data.put("count", count);
+        data.put("liquidNameA",preset.getLiquidA());
+        data.put("liquidNameB",preset.getLiquidB());
 
         // Kirim ke Firebase
         ref.setValue(data).addOnCompleteListener(task -> {
@@ -298,7 +293,7 @@ public class ScheduleController {
                 if (!snapshot.child(String.valueOf(i)).exists() ||
                         Long.parseLong(snapshot.child(String.valueOf(i)).child("enabled").getValue().toString()) == 0) {
                     targetSlot = i;
-                    break; // Ketemu slot kosong atau non-aktif
+                    break;
                 }
             }
 

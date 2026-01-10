@@ -10,7 +10,8 @@ public class ScheduleRTDB {
     public int volB;
     public int count;       // Jumlah botol
     private String key; // Tambahkan ini
-
+    public String liquidNameA;
+    public String liquidNameB;
     public String getKey() { return key; }
     public void setKey(String key) { this.key = key; }
     public ScheduleRTDB() {}
