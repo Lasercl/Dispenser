@@ -23,6 +23,9 @@ public class Dispenser implements Parcelable {
     private int bottleCount;
     private long timeStart;
     private long lastOnTimeStamp;
+    private int containerHeightTankA;
+    private int containerHeightTankB;
+
 
 
     private boolean power;
@@ -37,7 +40,6 @@ public class Dispenser implements Parcelable {
     private String category;
     private int currentBottle;
     public Dispenser() {
-        // WAJIB untuk Firebase
     }
     public Dispenser(String deviceName, boolean status) {
         this.deviceName = deviceName;
@@ -224,5 +226,21 @@ public class Dispenser implements Parcelable {
 
     public void setLastOnTimeStamp(long lastOnTimeStamp) {
         this.lastOnTimeStamp = lastOnTimeStamp;
+    }
+
+    public int getContainerHeightTankA() {
+        return containerHeightTankA;
+    }
+
+    public void setContainerHeightTankA(int containerHeightTankA) {
+        this.containerHeightTankA = containerHeightTankA;
+    }
+
+    public int getContainerHeightTankB() {
+        return containerHeightTankB;
+    }
+
+    public void setContainerHeightTankB(int containerHeightTankB) {
+        this.containerHeightTankB = containerHeightTankB;
     }
 }

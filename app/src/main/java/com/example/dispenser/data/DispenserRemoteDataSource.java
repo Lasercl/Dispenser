@@ -274,12 +274,14 @@ public class DispenserRemoteDataSource {
                                 String createdBy = document.getString("createdBy");
                                 String liquidA = document.getString("liquidA");
                                 String liquidB = document.getString("liquidB");
+                                String presetId = document.getId();
 
                                 // Gunakan safe null check untuk Integer
                                 Integer volA = document.getLong("volumeA") != null ? document.getLong("volumeA").intValue() : 0;
                                 Integer volB = document.getLong("volumeB") != null ? document.getLong("volumeB").intValue() : 0;
-
-                                presets.add(new PresetModel(id, namePreset, createdBy, liquidA, liquidB, volA, volB));
+                                PresetModel model=new PresetModel(id, namePreset, createdBy, liquidA, liquidB, volA, volB);
+                                model.setPresetId(presetId);
+                                presets.add(model);
                             } catch (Exception e) {
                                 Log.e("Firestore", "Error parsing: " + e.getMessage());
                             }
@@ -302,5 +304,14 @@ public class DispenserRemoteDataSource {
                 .child(deviceId).child("volumeFilledA").setValue(volumeA);
         database.getReference("dispenser")
                 .child(deviceId).child("volumeFilledB").setValue(volumeB);
+    }
+    public void updateTankHeightA(String deviceId, int height) {
+        database.getReference("dispenser").child(deviceId).child("containerHeightTankA").setValue(height);
+    }
+    public void updateTankHeightB(String deviceId, int height) {
+        database.getReference("dispenser").child(deviceId).child("containerHeightTankB").setValue(height);
+    }
+    public void updateBottleCount(String deviceId, int bottleCount) {
+        database.getReference("dispenser").child(deviceId).child("bottleCount").setValue(bottleCount);
     }
 }

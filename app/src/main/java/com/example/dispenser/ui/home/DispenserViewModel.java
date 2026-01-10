@@ -11,6 +11,8 @@ import com.example.dispenser.data.AddDispenserRepository;
 import com.example.dispenser.data.DispenserRepository;
 import com.example.dispenser.data.PresetModel;
 import com.example.dispenser.data.model.Dispenser;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.List;
 
@@ -19,7 +21,11 @@ public class DispenserViewModel extends AndroidViewModel {
     private LiveData<Dispenser> realtimeDispenser;
     private LiveData<Boolean> realtimePower;
 
-
+    public void deletePresetFromFirestore(String presetId) {
+        if (presetId == null) return;
+        // Ganti "presets" dengan nama node database kamu
+        FirebaseFirestore.getInstance().collection("presets").document(presetId).delete();
+    }
     public void updatePowerStatus(String deviceId, boolean power){
         repo.setDispenserPower(deviceId, power);
     }
@@ -53,6 +59,16 @@ public class DispenserViewModel extends AndroidViewModel {
         realtimePower = repo.listenPower(deviceId);
         return realtimePower;
     }
+    public void updateBottleCount(String deviceId, int bottleCount) {
+        repo.updateBottleCount(deviceId, bottleCount);
+    }
+    public void updateTankHeightA(String deviceId, int height) {
+        repo.updateTankHeightA(deviceId,height);
+    }
+    public void updateTankHeightB(String deviceId, int height) {
+        repo.updateTankHeightB(deviceId,height);
+    }
+
 
 
     // =====================
