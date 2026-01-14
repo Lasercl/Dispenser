@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -9,10 +8,9 @@
     android:background="@drawable/bg_app_gradient"
     tools:context=".ui.home.HomeActivity">
 
-
-
-    <include android:id="@+id/layoutToolbar" app:layout_constraintTop_toTopOf="parent" layout="@layout/custom_toolbar_dispenser" />
-
+    <include android:id="@+id/layoutToolbar"
+        app:layout_constraintTop_toTopOf="parent"
+        layout="@layout/custom_toolbar_dispenser" />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/fragment_container"
@@ -36,7 +34,6 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <!-- Device in Use -->
             <TextView
                 android:id="@+id/deviceInUse"
                 android:layout_width="wrap_content"
@@ -45,35 +42,58 @@
                 android:textColor="@android:color/black"
                 android:textStyle="bold" />
 
-            <!-- Device Name -->
             <TextView
                 android:id="@+id/deviceName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:text="Device Name: Matt &amp; Laser Machina"
+                android:text="Matt &amp; Laser Machina"
                 android:textColor="@android:color/black" />
 
-            <!-- Ilustrasi + Icon Checklist -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                app:cardBackgroundColor="#FFF3E0"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="0dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:padding="8dp">
+                    <ImageView
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
+                        android:src="@drawable/baseline_info_outline_24"
+                        app:tint="#E65100" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:text="Akurasi takaran bergantung pada Kalibrasi Pompa."
+                        android:textColor="#E65100"
+                        android:textSize="10sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="12dp"
                 android:gravity="center"
                 android:orientation="horizontal">
-
                 <ImageView
                     android:id="@+id/imgDevice"
                     android:layout_width="0dp"
-                    android:layout_height="150dp"
+                    android:layout_height="130dp"
                     android:layout_weight="1"
-                    android:contentDescription="Device"
-                    android:src="@drawable/dispenser" />
-
+                    android:src="@drawable/black_outlined_machine" />
                 <ImageView
                     android:id="@+id/imgCheck"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
                     android:layout_marginStart="16dp"
                     android:src="@drawable/notcheck" />
             </LinearLayout>
@@ -83,29 +103,49 @@
                 android:layout_height="match_parent"
                 android:fillViewport="true">
 
-                <androidx.constraintlayout.widget.ConstraintLayout
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
 
                     <LinearLayout
                         android:id="@+id/layout_category"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:background="@android:color/holo_orange_light" android:padding="12dp"
+                        android:background="@drawable/bg_target_input"
+                        android:padding="12dp"
                         android:layout_marginTop="8dp"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent">
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:foreground="?attr/selectableItemBackground">
 
-                        <TextView
-                            android:id="@+id/label_category_dispenser"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Category: Coffee Milk"
-                            android:textColor="@android:color/black"
-                            android:textSize="14sp"
-                            android:layout_gravity="center_horizontal" />
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <TextView
+                                android:id="@+id/label_category_dispenser"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Tap to Select Recipe"
+                                android:drawableEnd="@android:drawable/arrow_down_float"
+                                android:textColor="@android:color/black"
+                                android:textSize="14sp"
+                                android:textStyle="bold"
+                                android:layout_centerInParent="true" />
+
+                            <ImageView
+                                android:id="@+id/btn_add_preset_home"
+                                android:layout_width="28dp"
+                                android:layout_height="28dp"
+                                android:layout_alignParentEnd="true"
+                                android:layout_centerVertical="true"
+                                android:background="?attr/selectableItemBackgroundBorderless"
+                                android:padding="4dp"
+                                android:src="@android:drawable/ic_input_add"
+                                app:tint="#E65100" />
+                        </RelativeLayout>
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -122,18 +162,29 @@
                                 android:orientation="vertical">
 
                                 <ImageView
-                                    android:layout_width="40dp"
-                                    android:layout_height="40dp"
-                                    android:src="@drawable/beaker_liquid_filled_a"
-                                    android:contentDescription="Liquid A" />
+                                    android:id="@+id/img_beaker_a"
+                                    android:layout_width="60dp"
+                                    android:layout_height="60dp"
+                                    android:src="@drawable/beaker_liquid_filled_a" />
+
+                                <TextView
+                                    android:id="@+id/label_liquid_a"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Liquid A"
+                                    android:textColor="@android:color/black"
+                                    android:textSize="11sp"
+                                    android:textStyle="bold" />
 
                                 <TextView
                                     android:id="@+id/waterFilledLiquidA"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="Liquid A : -"
+                                    android:text="- ml"
                                     android:textColor="@android:color/black"
                                     android:textSize="12sp" />
+
+
                             </LinearLayout>
 
                             <LinearLayout
@@ -144,19 +195,96 @@
                                 android:orientation="vertical">
 
                                 <ImageView
-                                    android:layout_width="40dp"
-                                    android:layout_height="40dp"
-                                    android:src="@drawable/beaker_liquid_filled_b"
-                                    android:contentDescription="Liquid B" />
+                                    android:id="@+id/img_beaker_b"
+                                    android:layout_width="60dp"
+                                    android:layout_height="60dp"
+                                    android:src="@drawable/beaker_liquid_filled_b" />
+
+                                <TextView
+                                    android:id="@+id/label_liquid_b"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Liquid B"
+                                    android:textColor="@android:color/black"
+                                    android:textSize="11sp"
+                                    android:textStyle="bold" />
 
                                 <TextView
                                     android:id="@+id/waterFilledLiquidB"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="Liquid B : -"
+                                    android:text="- ml"
                                     android:textColor="@android:color/black"
                                     android:textSize="12sp" />
+
                             </LinearLayout>
+                        </LinearLayout>
+
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Pump Manual"
+                            android:textStyle="bold"
+                            android:gravity="center"
+                            android:textSize="18sp"
+                            android:layout_marginBottom="20dp" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center">
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical"
+                                android:gravity="center"
+                                android:layout_marginEnd="20dp">
+
+                                <androidx.appcompat.widget.SwitchCompat
+                                    android:id="@+id/switch_pump_1"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:thumbTint="@android:color/white"
+                                    app:trackTint="@android:color/holo_orange_dark" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Pump 1"
+                                    android:textSize="12sp"
+                                    android:textAllCaps="true"/>
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical"
+                                android:gravity="center">
+
+                                <androidx.appcompat.widget.SwitchCompat
+                                    android:id="@+id/switch_pump_2"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:thumbTint="@android:color/white"
+                                    app:trackTint="@android:color/holo_orange_dark" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Pump 2"
+                                    android:textSize="12sp"
+                                    android:textAllCaps="true"/>
+                            </LinearLayout>
+
                         </LinearLayout>
                     </LinearLayout>
 
@@ -166,467 +294,291 @@
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
                         android:weightSum="2"
-                        android:background="@android:color/holo_orange_light" android:layout_marginTop="1dp"
-                        app:layout_constraintTop_toBottomOf="@id/layout_category"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent">
+                        android:background="@android:color/holo_orange_light"
+                        android:layout_marginTop="2dp"
+                        android:padding="10dp">
 
                         <LinearLayout
-                            android:layout_width="0dp"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:orientation="vertical"
-                            android:padding="12dp">
+                            android:background="@drawable/bg_target_input"
+                            android:padding="10dp">
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Liquid Tank"
-                                android:textSize="16sp"
                                 android:textStyle="bold"
                                 android:textColor="@android:color/black"
-                                android:layout_marginBottom="4dp"/>
+                                android:textSize="13sp"
+                                android:layout_marginBottom="8dp"/>
 
                             <LinearLayout
-                                android:layout_width="wrap_content"
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:orientation="horizontal"
                                 android:gravity="center_vertical"
-                                android:layout_marginBottom="4dp">
+                                android:layout_marginBottom="8dp">
 
-                                <ImageView
-                                    android:layout_width="24dp"
-                                    android:layout_height="24dp"
-                                    android:src="@drawable/beaker"
-                                    android:contentDescription="Remaining Liquid" />
+                                <FrameLayout
+                                    android:layout_width="35dp"
+                                    android:layout_height="40dp"
+                                    android:layout_marginEnd="10dp">
+                                    <ImageView
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:src="@drawable/beaker"
+                                        android:alpha="0.2"
+                                        app:tint="@android:color/darker_gray" />
+                                    <ImageView
+                                        android:id="@+id/img_beaker_fill_a"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:src="@drawable/beaker_fill_clip"
+                                        app:tint="#FB8C00" />
+                                </FrameLayout>
 
-                                <TextView
-                                    android:id="@+id/water_level"
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:orientation="vertical">
+                                    <TextView
+                                        android:id="@+id/numberTankLiquidA"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="A: - %"
+                                        android:textSize="11sp"
+                                        android:textStyle="bold"
+                                        android:textColor="@android:color/black"/>
+                                    <TextView
+                                        android:id="@+id/nameLiquidTankA"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="-"
+                                        android:textSize="10sp"/>
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:id="@+id/layout_edit_tank_a"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginStart="4dp"
-                                    android:text="Remaining\nLiquid A : "
-                                    android:textColor="@android:color/black"
-                                    android:textSize="12sp" />
+                                    android:orientation="horizontal"
+                                    android:gravity="center_vertical"
+                                    android:background="@drawable/bg_target_input"
+                                    android:paddingHorizontal="6dp"
+                                    android:paddingVertical="4dp"
+                                    android:clickable="true"
+                                    android:focusable="true"
+                                    android:foreground="?attr/selectableItemBackground">
 
-                                <TextView
-                                    android:id="@+id/numberTankLiquidA"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginStart="4dp"
-                                    android:text="400 ml"
-                                    android:textStyle="bold"
-                                    android:textColor="@android:color/black"
-                                    android:textSize="12sp" />
+                                    <TextView
+                                        android:id="@+id/tv_tank_height_a"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="30cm"
+                                        android:textSize="9sp"
+                                        android:textColor="@android:color/black"
+                                        android:textStyle="bold"/>
+
+                                    <ImageView
+                                        android:layout_width="12dp"
+                                        android:layout_height="12dp"
+                                        android:layout_marginStart="4dp"
+                                        android:src="@android:drawable/ic_menu_edit"
+                                        app:tint="#E65100" />
+                                </LinearLayout>
                             </LinearLayout>
-                            <TextView
-                                android:id="@+id/nameLiquidTankA"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Coffee"
-                                android:layout_gravity="center"></TextView>
 
                             <LinearLayout
-                                android:layout_width="wrap_content"
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:orientation="horizontal"
                                 android:gravity="center_vertical">
 
-                                <ImageView
-                                    android:layout_width="24dp"
-                                    android:layout_height="24dp"
-                                    android:src="@drawable/beaker"
-                                    android:contentDescription="Remaining Liquid" />
+                                <FrameLayout
+                                    android:layout_width="35dp"
+                                    android:layout_height="40dp"
+                                    android:layout_marginEnd="10dp">
+                                    <ImageView
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:src="@drawable/beaker"
+                                        android:alpha="0.2"
+                                        app:tint="@android:color/darker_gray" />
+                                    <ImageView
+                                        android:id="@+id/img_beaker_fill_b"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:src="@drawable/beaker_fill_clip"
+                                        app:tint="#FB8C00" />
+                                </FrameLayout>
 
-                                <TextView
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:orientation="vertical">
+                                    <TextView
+                                        android:id="@+id/numberTankLiquidB"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="B: - %"
+                                        android:textSize="11sp"
+                                        android:textStyle="bold"
+                                        android:textColor="@android:color/black"/>
+                                    <TextView
+                                        android:id="@+id/nameLiquidTankB"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="-"
+                                        android:textSize="10sp"/>
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:id="@+id/layout_edit_tank_b"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginStart="4dp"
-                                    android:text="Remaining\nLiquid B : "
-                                    android:textColor="@android:color/black"
-                                    android:textSize="12sp" />
+                                    android:orientation="horizontal"
+                                    android:gravity="center_vertical"
+                                    android:background="@drawable/bg_target_input"
+                                    android:paddingHorizontal="6dp"
+                                    android:paddingVertical="4dp"
+                                    android:clickable="true"
+                                    android:focusable="true"
+                                    android:foreground="?attr/selectableItemBackground">
 
-                                <TextView
-                                    android:id="@+id/numberTankLiquidB"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginStart="4dp"
-                                    android:text="400 ml"
-                                    android:textStyle="bold"
-                                    android:textColor="@android:color/black"
-                                    android:textSize="12sp" />
+                                    <TextView
+                                        android:id="@+id/tv_tank_height_b"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="30cm"
+                                        android:textSize="9sp"
+                                        android:textColor="@android:color/black"
+                                        android:textStyle="bold"/>
+
+                                    <ImageView
+                                        android:layout_width="12dp"
+                                        android:layout_height="12dp"
+                                        android:layout_marginStart="4dp"
+                                        android:src="@android:drawable/ic_menu_edit"
+                                        app:tint="#E65100" />
+                                </LinearLayout>
                             </LinearLayout>
-                            <TextView
-                                android:id="@+id/nameLiquidTankB"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Milk"
-                                android:layout_gravity="center"></TextView>
                         </LinearLayout>
 
-                        <View
-                            android:layout_width="1dp"
-                            android:layout_height="match_parent"
-                            android:background="@android:color/darker_gray" />
-
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
-                            android:orientation="vertical"
-                            android:gravity="center"
-                            android:padding="12dp">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Schedule"
-                                android:textSize="16sp"
-                                android:textStyle="bold"
-                                android:textColor="@android:color/black"
-                                android:layout_marginBottom="4dp"/>
-
-                            <ImageView
-                                android:layout_width="24dp"
-                                android:layout_height="24dp"
-                                android:src="@drawable/ic_clock"
-                                android:contentDescription="Clock Icon"
-                                android:layout_marginBottom="2dp"/>
-
-                            <TextView
-                                android:id="@+id/scheduleDate"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="19 November 2025"
-                                android:textColor="@android:color/black"
-                                android:textSize="12sp" />
-
-                            <TextView
-                                android:id="@+id/scheduleClock"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="11:00 PM"
-                                android:textColor="@android:color/black"
-                                android:textSize="12sp" />
-                        </LinearLayout>
+<!--                        <LinearLayout-->
+<!--                            android:layout_width="0dp"-->
+<!--                            android:layout_height="match_parent"-->
+<!--                            android:layout_weight="1"-->
+<!--                            android:gravity="center"-->
+<!--                            android:orientation="vertical">-->
+<!--                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="System Status" android:textStyle="bold" android:textColor="@android:color/black" android:textSize="13sp"/>-->
+<!--                            <TextView android:id="@+id/status" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Not Connected" android:textColor="#F44336" android:textSize="11sp"/>-->
+<!--                        </LinearLayout>-->
                     </LinearLayout>
 
                     <LinearLayout
                         android:id="@+id/layout_production"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="1dp"
+                        android:layout_marginTop="2dp"
                         android:background="@android:color/holo_orange_light"
                         android:gravity="center_horizontal"
                         android:orientation="vertical"
-                        android:padding="12dp"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="1.0"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/layout_details"
-                        app:layout_constraintVertical_bias="0.0">
+                        android:padding="12dp">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:text="Production Progress"
+                            android:textStyle="bold"
+                            android:textSize="13sp"
                             android:layout_marginBottom="8dp"
-                            android:text="Production Preview"
-                            android:textColor="@android:color/black"
-                            android:textSize="16sp"
-                            android:textStyle="bold" />
+                            android:textColor="@android:color/black"/>
 
                         <LinearLayout
+                            android:id="@+id/container_target_edit"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="8dp"
-                            android:gravity="center_vertical"
-                            android:orientation="horizontal">
+                            android:orientation="horizontal"
+                            android:background="@drawable/bg_target_input"
+                            android:paddingHorizontal="12dp"
+                            android:paddingVertical="6dp"
+                            android:gravity="center"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:foreground="?attr/selectableItemBackground">
 
-                            <ImageView
-                                android:layout_width="32dp"
-                                android:layout_height="32dp"
-                                android:layout_marginEnd="16dp"
-                                android:contentDescription="Production Icon"
-                                android:src="@drawable/production" />
-
-                            <LinearLayout
+                            <TextView
+                                android:id="@+id/numberOfProduction"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:orientation="vertical">
+                                android:text="Number Of Production: 0"
+                                android:textColor="@android:color/black"
+                                android:textSize="14sp"
+                                android:textStyle="bold" />
 
-                                <TextView
-                                    android:id="@+id/numberOfProduction"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="Number of Production: 10"
-                                    android:textColor="@android:color/black"
-                                    android:textSize="12sp" />
-
-                                <TextView
-                                    android:id="@+id/productionCompleted"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="Production Completed: 4"
-                                    android:textColor="@android:color/black"
-                                    android:textSize="12sp" />
-
-                                <TextView
-                                    android:id="@+id/remainingToComplete"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="Remaining to complete: 6"
-                                    android:textColor="@android:color/black"
-                                    android:textSize="12sp" />
-                            </LinearLayout>
+                            <ImageView
+                                android:layout_width="16dp"
+                                android:layout_height="16dp"
+                                android:layout_marginStart="8dp"
+                                android:src="@android:drawable/ic_menu_edit"
+                                app:tint="@android:color/darker_gray" />
                         </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/productionCompleted"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:text="Completed: -"
+                            android:textColor="@android:color/black"
+                            android:textSize="12sp" />
+
+                        <TextView
+                            android:id="@+id/remainingToComplete"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Remaining: -"
+                            android:textColor="@android:color/black"
+                            android:textSize="12sp" />
 
                         <ImageView
                             android:id="@+id/powerDevice"
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
-                            android:layout_marginTop="8dp"
-                            android:contentDescription="Power Button"
-                            android:src="@drawable/on" />
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_marginTop="12dp"
+                            android:src="@drawable/on"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:foreground="?attr/selectableItemBackgroundBorderless"/>
+                        <TextView
+                            android:id="@+id/powerText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Start Production"
+                            android:textStyle="bold"></TextView>
                     </LinearLayout>
-                </androidx.constraintlayout.widget.ConstraintLayout>
+                </LinearLayout>
             </ScrollView>
-
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
     <Button
-    android:id="@+id/btn_create_schedule"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:text="Create Schedule"
-    android:textColor="@android:color/white"
-    android:backgroundTint="#FFA07A"
-    android:elevation="10dp"
-    android:paddingStart="24dp"
-    android:paddingEnd="24dp"
-
-    app:layout_constraintTop_toBottomOf="@id/fragment_container"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintEnd_toEndOf="parent" />
+        android:id="@+id/btn_create_schedule"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="View &amp; Create Schedule"
+        android:textColor="@android:color/white"
+        android:backgroundTint="#FFA07A"
+        android:paddingStart="24dp"
+        android:paddingEnd="24dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginBottom="16dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-
-<!--    <?xml version="1.0" encoding="utf-8"?>-->
-<!--<androidx.constraintlayout.widget.ConstraintLayout-->
-<!--xmlns:android="http://schemas.android.com/apk/res/android"-->
-<!--xmlns:app="http://schemas.android.com/apk/res-auto"-->
-<!--xmlns:tools="http://schemas.android.com/tools"-->
-<!--android:layout_width="match_parent"-->
-<!--android:layout_height="match_parent"-->
-<!--android:background="@drawable/bg_app_gradient">-->
-
-<!--<include android:id="@+id/layoutToolbar"-->
-<!--    app:layout_constraintTop_toTopOf="parent"-->
-<!--    layout="@layout/custom_toolbar_dispenser" />-->
-
-<!--<androidx.cardview.widget.CardView-->
-<!--    android:id="@+id/fragment_container"-->
-<!--    android:layout_width="0dp"-->
-<!--    android:layout_height="0dp"-->
-<!--    android:layout_marginTop="5dp"-->
-<!--    android:layout_marginHorizontal="2dp"-->
-<!--    app:cardCornerRadius="12dp"-->
-<!--    app:cardElevation="4dp"-->
-<!--    app:layout_constraintWidth_percent="0.85"-->
-<!--    app:layout_constraintHeight_percent="0.82"-->
-<!--    app:layout_constraintEnd_toEndOf="parent"-->
-<!--    app:layout_constraintStart_toStartOf="parent"-->
-<!--    app:layout_constraintBottom_toTopOf="@id/btn_create_schedule"-->
-<!--    app:layout_constraintTop_toBottomOf="@id/layoutToolbar">-->
-
-<!--    <LinearLayout-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent"-->
-<!--        android:background="@android:color/white"-->
-<!--        android:orientation="vertical"-->
-<!--        android:padding="16dp">-->
-
-<!--        <TextView-->
-<!--            android:id="@+id/deviceInUse"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:text="Device in Use:"-->
-<!--            android:textColor="@android:color/black"-->
-<!--            android:textStyle="bold" />-->
-
-<!--        <TextView-->
-<!--            android:id="@+id/deviceName"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_marginTop="4dp"-->
-<!--            android:text="Matt &amp; Laser Machina"-->
-<!--            android:textColor="@android:color/black" />-->
-
-<!--        <androidx.cardview.widget.CardView-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_marginTop="10dp"-->
-<!--            app:cardBackgroundColor="#FFF3E0"-->
-<!--            app:cardCornerRadius="8dp"-->
-<!--            app:cardElevation="0dp">-->
-<!--            <LinearLayout-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:gravity="center_vertical"-->
-<!--                android:padding="8dp">-->
-<!--                <ImageView-->
-<!--                    android:layout_width="16dp"-->
-<!--                    android:layout_height="16dp"-->
-<!--                    android:src="@drawable/ic_info"-->
-<!--                    app:tint="#E65100" />-->
-<!--                <TextView-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_marginStart="8dp"-->
-<!--                    android:text="Akurasi takaran bergantung pada Kalibrasi Pompa."-->
-<!--                    android:textColor="#E65100"-->
-<!--                    android:textSize="10sp"-->
-<!--                    android:textStyle="bold" />-->
-<!--            </LinearLayout>-->
-<!--        </androidx.cardview.widget.CardView>-->
-
-<!--        <LinearLayout-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_marginTop="12dp"-->
-<!--            android:gravity="center"-->
-<!--            android:orientation="horizontal">-->
-<!--            <ImageView-->
-<!--                android:id="@+id/imgDevice"-->
-<!--                android:layout_width="0dp"-->
-<!--                android:layout_height="130dp"-->
-<!--                android:layout_weight="1"-->
-<!--                android:src="@drawable/dispenser" />-->
-<!--            <ImageView-->
-<!--                android:id="@+id/imgCheck"-->
-<!--                android:layout_width="35dp"-->
-<!--                android:layout_height="35dp"-->
-<!--                android:layout_marginStart="16dp"-->
-<!--                android:src="@drawable/notcheck" />-->
-<!--        </LinearLayout>-->
-
-<!--        <ScrollView-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="match_parent"-->
-<!--            android:fillViewport="true">-->
-
-<!--            <LinearLayout-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:orientation="vertical">-->
-
-<!--                <LinearLayout-->
-<!--                    android:id="@+id/layout_category"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:orientation="vertical"-->
-<!--                    android:background="@android:color/holo_orange_light"-->
-<!--                    android:padding="12dp"-->
-<!--                    android:layout_marginTop="8dp"-->
-<!--                    android:clickable="true"-->
-<!--                    android:focusable="true">-->
-
-<!--                    <TextView-->
-<!--                        android:id="@+id/label_category_dispenser"-->
-<!--                        android:layout_width="wrap_content"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:text="Select Recipe ▼"-->
-<!--                        android:textColor="@android:color/black"-->
-<!--                        android:textSize="14sp"-->
-<!--                        android:textStyle="bold"-->
-<!--                        android:layout_gravity="center_horizontal" />-->
-
-<!--                    <LinearLayout-->
-<!--                        android:layout_width="match_parent"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:orientation="horizontal"-->
-<!--                        android:weightSum="2"-->
-<!--                        android:layout_marginTop="8dp">-->
-<!--                        <TextView android:id="@+id/waterFilledLiquidA" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="A: - ml" android:gravity="center" android:textColor="@android:color/black" android:textSize="12sp" />-->
-<!--                        <TextView android:id="@+id/waterFilledLiquidB" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="B: - ml" android:gravity="center" android:textColor="@android:color/black" android:textSize="12sp" />-->
-<!--                    </LinearLayout>-->
-<!--                </LinearLayout>-->
-
-<!--                <LinearLayout-->
-<!--                    android:id="@+id/layout_details"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:orientation="horizontal"-->
-<!--                    android:weightSum="2"-->
-<!--                    android:background="@android:color/holo_orange_light"-->
-<!--                    android:layout_marginTop="2dp"-->
-<!--                    android:padding="10dp">-->
-
-<!--                    <LinearLayout-->
-<!--                        android:layout_width="0dp"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:layout_weight="1"-->
-<!--                        android:orientation="vertical">-->
-<!--                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Liquid Tank" android:textStyle="bold" android:textColor="@android:color/black" android:textSize="13sp"/>-->
-<!--                        <TextView android:id="@+id/numberTankLiquidA" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="A: 400ml" android:textSize="11sp" android:textColor="@android:color/black"/>-->
-<!--                        <TextView android:id="@+id/nameLiquidTankA" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Coffee" android:textSize="10sp"/>-->
-<!--                        <TextView android:id="@+id/numberTankLiquidB" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="B: 400ml" android:textSize="11sp" android:textColor="@android:color/black"/>-->
-<!--                        <TextView android:id="@+id/nameLiquidTankB" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Milk" android:textSize="10sp"/>-->
-<!--                    </LinearLayout>-->
-
-<!--                    <LinearLayout-->
-<!--                        android:layout_width="0dp"-->
-<!--                        android:layout_height="match_parent"-->
-<!--                        android:layout_weight="1"-->
-<!--                        android:gravity="center"-->
-<!--                        android:orientation="vertical">-->
-<!--                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="System Status" android:textStyle="bold" android:textColor="@android:color/black" android:textSize="13sp"/>-->
-<!--                        <TextView android:id="@+id/scheduleDate" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Connected" android:textColor="#4CAF50" android:textSize="11sp"/>-->
-<!--                        <TextView android:id="@+id/scheduleClock" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Ready to Pour" android:textSize="10sp"/>-->
-<!--                    </LinearLayout>-->
-<!--                </LinearLayout>-->
-
-<!--                <LinearLayout-->
-<!--                    android:id="@+id/layout_production"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_marginTop="2dp"-->
-<!--                    android:background="@android:color/holo_orange_light"-->
-<!--                    android:gravity="center_horizontal"-->
-<!--                    android:orientation="vertical"-->
-<!--                    android:padding="12dp">-->
-
-<!--                    <TextView android:id="@+id/numberOfProduction" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Total Production: 10" android:textColor="@android:color/black" android:textSize="12sp" />-->
-<!--                    <TextView android:id="@+id/productionCompleted" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Completed: 4" android:textColor="@android:color/black" android:textSize="12sp" />-->
-<!--                    <TextView android:id="@+id/remainingToComplete" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Remaining: 6" android:textColor="@android:color/black" android:textSize="12sp" />-->
-
-<!--                    <ImageView-->
-<!--                        android:id="@+id/powerDevice"-->
-<!--                        android:layout_width="45dp"-->
-<!--                        android:layout_height="45dp"-->
-<!--                        android:layout_marginTop="8dp"-->
-<!--                        android:src="@drawable/on" />-->
-<!--                </LinearLayout>-->
-<!--            </LinearLayout>-->
-<!--        </ScrollView>-->
-<!--    </LinearLayout>-->
-<!--</androidx.cardview.widget.CardView>-->
-
-<!--<Button-->
-<!--    android:id="@+id/btn_create_schedule"-->
-<!--    android:layout_width="wrap_content"-->
-<!--    android:layout_height="wrap_content"-->
-<!--    android:text="View &amp; Create Schedule"-->
-<!--    android:textColor="@android:color/white"-->
-<!--    android:backgroundTint="#FFA07A"-->
-<!--    android:paddingStart="24dp"-->
-<!--    android:paddingEnd="24dp"-->
-<!--    app:layout_constraintBottom_toBottomOf="parent"-->
-<!--    app:layout_constraintEnd_toEndOf="parent"-->
-<!--    app:layout_constraintStart_toStartOf="parent"-->
-<!--    android:layout_marginBottom="16dp" />-->
-
-<!--</androidx.constraintlayout.widget.ConstraintLayout>-->

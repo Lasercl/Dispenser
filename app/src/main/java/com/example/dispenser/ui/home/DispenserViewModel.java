@@ -9,14 +9,23 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.dispenser.data.AddDispenserRepository;
 import com.example.dispenser.data.DispenserRepository;
+import com.example.dispenser.data.PresetModel;
 import com.example.dispenser.data.model.Dispenser;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.List;
 
 public class DispenserViewModel extends AndroidViewModel {
     private DispenserRepository repo;
     private LiveData<Dispenser> realtimeDispenser;
     private LiveData<Boolean> realtimePower;
 
-
+    public void deletePresetFromFirestore(String presetId) {
+        if (presetId == null) return;
+        // Ganti "presets" dengan nama node database kamu
+        FirebaseFirestore.getInstance().collection("presets").document(presetId).delete();
+    }
     public void updatePowerStatus(String deviceId, boolean power){
         repo.setDispenserPower(deviceId, power);
     }
@@ -50,6 +59,16 @@ public class DispenserViewModel extends AndroidViewModel {
         realtimePower = repo.listenPower(deviceId);
         return realtimePower;
     }
+    public void updateBottleCount(String deviceId, int bottleCount) {
+        repo.updateBottleCount(deviceId, bottleCount);
+    }
+    public void updateTankHeightA(String deviceId, int height) {
+        repo.updateTankHeightA(deviceId,height);
+    }
+    public void updateTankHeightB(String deviceId, int height) {
+        repo.updateTankHeightB(deviceId,height);
+    }
+
 
 
     // =====================
@@ -59,6 +78,18 @@ public class DispenserViewModel extends AndroidViewModel {
     protected void onCleared() {
         super.onCleared();
         repo.stopListenDispenser();
+    }
+
+    public void savePresetToFirestore(String name, int vA, int vB, String liquidA, String liquidB) {
+        repo.savePresetToFirestore(name, vA, vB, liquidA, liquidB);
+    }
+
+    public LiveData<List<PresetModel>>getAllPresets() {
+        return repo.getAllPresets();
+    }
+
+    public void updateSelectedRecipe(String deviceId, String namePresets, String liquidA, String liquidB, int volumeA, int volumeB) {
+        repo.updateSelectedRecipe(deviceId, namePresets, liquidA, liquidB, volumeA, volumeB);
     }
     // TODO: Implement the ViewModel
 }

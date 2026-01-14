@@ -8,9 +8,11 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -18,9 +20,6 @@ import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.example.dispenser.R;
 import com.example.dispenser.data.PresetModel;
@@ -45,7 +44,11 @@ public class ScheduleActivity extends AppCompatActivity {
     private CheckBox checkSun, checkMon, checkTue, checkWed, checkThu, checkFri, checkSat;
     private Button buttonConfirm;
     private TextView liquidATextView, liquidBTextView;
-    private TextView spinnerCategoryTextView;
+
+    // PERBAIKAN DI SINI: Pisahkan Container dan TextView
+    private View spinnerCategoryContainer;
+    private TextView tvSelectedRecipeName;
+
     private ScheduleController scheduleController;
 
     // Variabel untuk Edit Mode
@@ -63,12 +66,12 @@ public class ScheduleActivity extends AppCompatActivity {
         if (getSupportActionBar() != null) {
             getSupportActionBar().setTitle(slotIndex == -1 ? "Set Schedule" : "Edit Schedule");
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.bg_rounded_transparent));
         }
 
-        // Inisialisasi View (Sama seperti sebelumnya)
         initViews();
 
-        // 4. Jika Mode EDIT: Ambil data dari Firebase
+        // Jika Mode EDIT: Ambil data dari Firebase
         if (slotIndex != -1) {
             loadExistingScheduleData(slotIndex);
         }
@@ -76,7 +79,11 @@ public class ScheduleActivity extends AppCompatActivity {
 
     private void initViews() {
         scheduleController = new ScheduleController(this.getApplication());
-        spinnerCategoryTextView = findViewById(R.id.spinner_category);
+
+        // PERBAIKAN: Hubungkan ke ID yang sesuai di XML baru
+        spinnerCategoryContainer = findViewById(R.id.spinner_category);
+        tvSelectedRecipeName = findViewById(R.id.tv_selected_recipe_name);
+
         liquidATextView = findViewById(R.id.liquidAText);
         liquidBTextView = findViewById(R.id.liquidBText);
         timePicker = findViewById(R.id.time_picker);
@@ -93,11 +100,11 @@ public class ScheduleActivity extends AppCompatActivity {
         inputBottleCount = findViewById(R.id.input_bottleCount);
         buttonConfirm = findViewById(R.id.button_confirm);
 
-        spinnerCategoryTextView.setOnClickListener(v -> showDynamicPopupMenuRx(spinnerCategoryTextView));
+        // PERBAIKAN: Pasang listener pada Container (LinearLayout)
+        spinnerCategoryContainer.setOnClickListener(v -> showDynamicPopupMenuRx(spinnerCategoryContainer));
         buttonConfirm.setOnClickListener(view -> saveScheduleToMachine());
     }
 
-    // Fungsi untuk mengambil data lama jika Edit Mode
     private void loadExistingScheduleData(int index) {
         String deviceId = scheduleController.getDispenserLastId();
         disposables.add(
@@ -105,14 +112,10 @@ public class ScheduleActivity extends AppCompatActivity {
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(s -> {
-                            // Isi TimePicker
                             timePicker.setHour(s.hour);
                             timePicker.setMinute(s.minute);
-
-                            // Isi Bottle Count
                             inputBottleCount.setText(String.valueOf(s.count));
 
-                            // Isi Checkboxes (Bitmask decoder)
                             checkSun.setChecked((s.dowMask & (1 << 0)) != 0);
                             checkMon.setChecked((s.dowMask & (1 << 1)) != 0);
                             checkTue.setChecked((s.dowMask & (1 << 2)) != 0);
@@ -121,12 +124,11 @@ public class ScheduleActivity extends AppCompatActivity {
                             checkFri.setChecked((s.dowMask & (1 << 5)) != 0);
                             checkSat.setChecked((s.dowMask & (1 << 6)) != 0);
 
-                            // Set Preset Manual (karena data volume ada di schedule)
-                            spinnerCategoryTextView.setText(s.categoryName + " ▼");
+                            // PERBAIKAN: Set text ke tvSelectedRecipeName
+                            tvSelectedRecipeName.setText(s.categoryName + " ▼");
                             liquidATextView.setText("Liquid A: " + s.volA + " ml");
                             liquidBTextView.setText("Liquid B: " + s.volB + " ml");
 
-                            // Buat preset dummy agar tidak null saat save
                             presetModelGlobal = new PresetModel();
                             presetModelGlobal.setNamePresets(s.categoryName);
                             presetModelGlobal.setVolumeA(s.volA);
@@ -139,7 +141,7 @@ public class ScheduleActivity extends AppCompatActivity {
     private void saveScheduleToMachine() {
         String deviceId = scheduleController.getDispenserLastId();
         if (deviceId == null || presetModelGlobal == null) {
-            Toast.makeText(this, "Data belum lengkap", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Pilih resep dulu!", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -155,31 +157,29 @@ public class ScheduleActivity extends AppCompatActivity {
         int bottleCount = countStr.isEmpty() ? 1 : Integer.parseInt(countStr);
 
         if (slotIndex != -1) {
-            // MODE EDIT
             scheduleController.saveToRTDB(deviceId, slotIndex, presetModelGlobal, hour, minute, dowMask, bottleCount);
             Toast.makeText(this, "Jadwal diperbarui", Toast.LENGTH_SHORT).show();
         } else {
-            // MODE TAMBAH
             scheduleController.findEmptySlotAndSave(deviceId, presetModelGlobal, hour, minute, dowMask, bottleCount);
             Toast.makeText(this, "Jadwal baru disimpan", Toast.LENGTH_SHORT).show();
         }
         finish();
     }
 
-    // Logika pengubahan Checkbox ke angka bitmask (0-127)
     private int calculateDowMask() {
         int mask = 0;
-        if (checkSun.isChecked()) mask |= (1 << 0); // 1
-        if (checkMon.isChecked()) mask |= (1 << 1); // 2
-        if (checkTue.isChecked()) mask |= (1 << 2); // 4
-        if (checkWed.isChecked()) mask |= (1 << 3); // 8
-        if (checkThu.isChecked()) mask |= (1 << 4); // 16
-        if (checkFri.isChecked()) mask |= (1 << 5); // 32
-        if (checkSat.isChecked()) mask |= (1 << 6); // 64
+        if (checkSun.isChecked()) mask |= (1 << 0);
+        if (checkMon.isChecked()) mask |= (1 << 1);
+        if (checkTue.isChecked()) mask |= (1 << 2);
+        if (checkWed.isChecked()) mask |= (1 << 3);
+        if (checkThu.isChecked()) mask |= (1 << 4);
+        if (checkFri.isChecked()) mask |= (1 << 5);
+        if (checkSat.isChecked()) mask |= (1 << 6);
         return mask;
     }
 
-    private void showDynamicPopupMenuRx(TextView anchorView) {
+    // PERBAIKAN: Parameter diubah menjadi View anchorView
+    private void showDynamicPopupMenuRx(View anchorView) {
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser == null) return;
 
@@ -195,7 +195,7 @@ public class ScheduleActivity extends AppCompatActivity {
         );
     }
 
-    private void showPopupMenu(TextView anchorView, List<PresetModel> finalPresets) {
+    private void showPopupMenu(View anchorView, List<PresetModel> finalPresets) {
         PopupMenu popup = new PopupMenu(this, anchorView);
         for (int i = 0; i < finalPresets.size(); i++) {
             popup.getMenu().add(Menu.NONE, i, i, finalPresets.get(i).getNamePresets());
@@ -218,7 +218,8 @@ public class ScheduleActivity extends AppCompatActivity {
 
     private void handlePresetSelection(PresetModel selectedPreset) {
         presetModelGlobal = selectedPreset;
-        spinnerCategoryTextView.setText(selectedPreset.getNamePresets() + " ▼");
+        // PERBAIKAN: Set text ke tvSelectedRecipeName
+        tvSelectedRecipeName.setText(selectedPreset.getNamePresets() + " ▼");
         liquidATextView.setText("Liquid A: " + selectedPreset.getVolumeA() + " ml");
         liquidBTextView.setText("Liquid B: " + selectedPreset.getVolumeB() + " ml");
     }

@@ -33,8 +33,6 @@ public class DispenserUtility {
     public static String formatHistoryDate(Date date) {
         if (date == null) return "-";
 
-        // HH:mm -> Jam:Menit (24 Jam)
-        // dd MMM yyyy -> Tanggal, Bulan (Singkat), Tahun
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm | dd MMM yyyy", new Locale("id", "ID"));
 
         return sdf.format(date);

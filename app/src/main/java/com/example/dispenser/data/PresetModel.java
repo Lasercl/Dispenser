@@ -19,6 +19,16 @@ public class PresetModel {
     private int volumeA;
     private int volumeB;
 
+    public String getPresetId() {
+        return presetId;
+    }
+
+    public void setPresetId(String presetId) {
+        this.presetId = presetId;
+    }
+
+    private String presetId;
+
     // Kontruktor
     public PresetModel() {}
     public PresetModel(String id,String namePresets, String createdBy, String liquidA, String liquidB, int volumeA, int volumeB) {

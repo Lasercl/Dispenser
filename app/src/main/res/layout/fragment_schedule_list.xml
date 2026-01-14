@@ -24,4 +24,21 @@
         android:layout_margin="16dp"
         android:src="@drawable/add"
         app:tint="@color/white" />
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_remove_confirm"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="16dp"
+        android:text="Remove Schedule"
+        android:textColor="@android:color/white"
+        android:backgroundTint="#D32F2F"
+        android:visibility="gone"
+        app:icon="@android:drawable/ic_menu_delete"
+        app:iconGravity="textStart"
+        app:iconPadding="8dp"
+        app:iconTint="@android:color/white"
+        app:cornerRadius="12dp"
+        app:elevation="8dp" />
+
 </LinearLayout>

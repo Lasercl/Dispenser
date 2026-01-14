@@ -8,7 +8,6 @@
 
     <include android:id="@+id/layoutToolbarHome" app:layout_constraintTop_toTopOf="parent" layout="@layout/toolbar_logo" />
 
-    <!-- PROFILE CARD -->
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/cardProfile"
         android:layout_width="0dp"
@@ -32,10 +31,7 @@
                 android:layout_height="60dp"
                 android:src="@drawable/outline_person_24"
                 android:scaleType="centerCrop"
-
                 app:shapeAppearanceOverlay="@style/CircleImage" />
-
-
 
             <TextView
                 android:id="@+id/tvUserName"
@@ -46,26 +42,8 @@
                 android:textStyle="bold"
                 android:layout_marginLeft="16dp" />
         </LinearLayout>
-
     </com.google.android.material.card.MaterialCardView>
 
-
-    <!-- LABEL: DEVICE IN USE -->
-    <TextView
-        android:id="@+id/tvDeviceInUse"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Device in Use:"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="12dp"
-        app:layout_constraintTop_toBottomOf="@id/cardProfile"
-        app:layout_constraintStart_toStartOf="parent" />
-
-
-
-    <!-- DEVICE CARD -->
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/cardDevice"
         android:layout_width="0dp"
@@ -73,7 +51,8 @@
         android:layout_margin="16dp"
         app:cardCornerRadius="20dp"
         app:cardElevation="10dp"
-        app:layout_constraintTop_toBottomOf="@id/tvDeviceInUse"
+        app:layout_constraintTop_toBottomOf="@id/cardProfile"
+        android:layout_marginTop="40dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
@@ -87,12 +66,11 @@
                 android:id="@+id/tvDeviceName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Device Name: Matt Laser Machina"
+                android:text="Matt Laser Machina"
                 android:textSize="14sp"
                 android:textStyle="bold"
-                android:gravity="center" />
+                android:layout_gravity="center" />
 
-            <!-- MACHINE + CHECK MARK -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -103,25 +81,21 @@
                 <ImageView
                     android:layout_width="120dp"
                     android:layout_height="120dp"
-                    android:src="@drawable/dispenser" />
+                    android:src="@drawable/black_outlined_machine" />
 
                 <ImageView
                     android:id="@+id/imageCheckHome"
-                    android:layout_width="70dp"
-                    android:layout_height="70dp"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
                     android:src="@drawable/notcheck" />
             </LinearLayout>
 
-            <!-- LIQUID TANK CARD -->
-            <!-- LIQUID TANK CARD -->
             <com.google.android.material.card.MaterialCardView
-                xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="4dp"
+                android:layout_marginTop="16dp"
+                app:cardCornerRadius="15dp"
+                app:cardElevation="6dp"
                 android:backgroundTint="#FFB769">
 
                 <LinearLayout
@@ -133,11 +107,11 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Liquid Tank"
-                        android:textSize="20sp"
+                        android:text="Liquid Tank Status"
+                        android:textSize="18sp"
                         android:textColor="#2D4F35"
                         android:layout_gravity="center_horizontal"
-                        android:layout_marginBottom="24dp"
+                        android:layout_marginBottom="16dp"
                         android:textStyle="bold" />
 
                     <LinearLayout
@@ -152,52 +126,38 @@
                             android:orientation="vertical"
                             android:gravity="center">
 
-                            <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:orientation="horizontal"
-                                android:gravity="center_vertical">
-
+                            <FrameLayout
+                                android:layout_width="50dp"
+                                android:layout_height="75dp">
                                 <ImageView
-                                    android:id="@+id/imgBeakerA"
-                                    android:layout_width="50dp"
-                                    android:layout_height="70dp"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
                                     android:src="@drawable/beaker"
+                                    app:tint="#D1D1D1" />
+                                <ImageView
+                                    android:id="@+id/imgBeakerFillA"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:src="@drawable/beaker_fill_clip"
                                     app:tint="@android:color/white" />
-
-                                <LinearLayout
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:orientation="vertical"
-                                    android:layout_marginStart="8dp">
-
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:text="Remaining"
-                                        android:textColor="#333333"
-                                        android:textSize="13sp" />
-
-                                    <TextView
-                                        android:id="@+id/tvLiquidPercentA"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:text="Liquid: 0 %"
-                                        android:textStyle="bold"
-                                        android:textColor="@android:color/holo_red_dark"
-                                        android:textSize="13sp" />
-                                </LinearLayout>
-                            </LinearLayout>
-
+                            </FrameLayout>
                             <TextView
                                 android:id="@+id/tvLabelA"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Liquid A: -"
                                 android:textStyle="bold"
-                                android:textSize="15sp"
+                                android:textSize="14sp"
                                 android:textColor="@android:color/black"
-                                android:layout_marginTop="12dp" />
+                                android:layout_marginTop="4dp" />
+                            <TextView
+                                android:id="@+id/tvLiquidPercentA"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="0%"
+                                android:textStyle="bold"
+                                android:layout_marginTop="4dp"
+                                android:textColor="@android:color/black"/>
                         </LinearLayout>
 
                         <LinearLayout
@@ -207,60 +167,42 @@
                             android:orientation="vertical"
                             android:gravity="center">
 
-                            <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:orientation="horizontal"
-                                android:gravity="center_vertical">
-
+                            <FrameLayout
+                                android:layout_width="50dp"
+                                android:layout_height="75dp">
                                 <ImageView
-                                    android:id="@+id/imgBeakerB"
-                                    android:layout_width="50dp"
-                                    android:layout_height="70dp"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
                                     android:src="@drawable/beaker"
+                                    app:tint="#D1D1D1" />
+                                <ImageView
+                                    android:id="@+id/imgBeakerFillB"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:src="@drawable/beaker_fill_clip"
                                     app:tint="@android:color/white" />
-
-                                <LinearLayout
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:orientation="vertical"
-                                    android:layout_marginStart="8dp">
-
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:text="Remaining"
-                                        android:textColor="#333333"
-                                        android:textSize="13sp" />
-
-                                    <TextView
-                                        android:id="@+id/tvLiquidPercentB"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:text="Liquid: 0 %"
-                                        android:textStyle="bold"
-                                        android:textColor="@android:color/holo_red_dark"
-                                        android:textSize="13sp" />
-                                </LinearLayout>
-                            </LinearLayout>
-
+                            </FrameLayout>
                             <TextView
                                 android:id="@+id/tvLabelB"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Liquid B: -"
                                 android:textStyle="bold"
-                                android:textSize="15sp"
+                                android:textSize="14sp"
                                 android:textColor="@android:color/black"
-                                android:layout_marginTop="12dp" />
+                                android:layout_marginTop="4dp" />
+                            <TextView
+                                android:id="@+id/tvLiquidPercentB"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="0%"
+                                android:textStyle="bold"
+                                android:layout_marginTop="4dp"
+                                android:textColor="@android:color/black"/>
                         </LinearLayout>
-
                     </LinearLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
-
         </LinearLayout>
-
     </com.google.android.material.card.MaterialCardView>
-
 </androidx.constraintlayout.widget.ConstraintLayout>
