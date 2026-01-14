@@ -45,6 +45,9 @@ public class HomeFragment extends Fragment {
     private ImageView checklist;
     private ImageView profilePhoto;
     private TextView nameProfile;
+    // Tambahkan di bagian atas bersama TextView lainnya
+    private ImageView imgBeakerFillA;
+    private ImageView imgBeakerFillB;
 
     private HomeViewModel mViewModel;
 
@@ -82,6 +85,27 @@ public class HomeFragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
+    private void updateBeaker(ImageView view, int percent) {
+        if (view == null) return;
+
+        // ClipDrawable menggunakan rentang 0 (kosong) sampai 10000 (penuh)
+        int targetLevel = percent * 100;
+
+        // Ganti warna menjadi merah jika kritis (di bawah 15%)
+        if (percent < 15) {
+            view.setColorFilter(android.graphics.Color.RED);
+        } else {
+            view.setColorFilter(android.graphics.Color.WHITE);
+        }
+
+        android.graphics.drawable.Drawable drawable = view.getDrawable();
+        if (drawable instanceof android.graphics.drawable.ClipDrawable) {
+            // Animasi angka level dari posisi sekarang ke target baru
+            android.animation.ObjectAnimator.ofInt(drawable, "level", drawable.getLevel(), targetLevel)
+                    .setDuration(1000) // durasi 1 detik
+                    .start();
+        }
+    }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -94,6 +118,12 @@ public class HomeFragment extends Fragment {
         checklist=view.findViewById(R.id.imageCheckHome);
         nameProfile=view.findViewById(R.id.tvUserName);
         profilePhoto=view.findViewById(R.id.imageProfileHome);
+        imgBeakerFillA = view.findViewById(R.id.imgBeakerFillA);
+        imgBeakerFillB = view.findViewById(R.id.imgBeakerFillB);
+
+        // Set level awal ke 0 saat aplikasi pertama dibuka
+        if (imgBeakerFillA != null) imgBeakerFillA.setImageLevel(0);
+        if (imgBeakerFillB != null) imgBeakerFillB.setImageLevel(0);
     }
     private void updateDispenserUI(Dispenser dispenser) {
         if (dispenser == null) return;
@@ -107,9 +137,11 @@ public class HomeFragment extends Fragment {
         }
         nameLiquidTankA.setText("Liquid A: "+dispenser.getLiquidNameA());
         nameLiquidTankB.setText("Liquid B: "+dispenser.getLiquidNameB());
-        volumeLiquidTankA.setText("Liquid: "+dispenser.getVolumeFilledA()+" %");
-        volumeLiquidTankB.setText("Liquid: "+dispenser.getVolumeFilledB()+" %");
+        volumeLiquidTankA.setText(dispenser.getWaterLevelTankA()+" %");
+        volumeLiquidTankB.setText(dispenser.getWaterLevelTankB()+" %");
         deviceName.setText("Device Name: "+dispenser.getDeviceName());
+        updateBeaker(imgBeakerFillA, dispenser.getWaterLevelTankA());
+        updateBeaker(imgBeakerFillB, dispenser.getWaterLevelTankB());
         // Asumsi Tank A");
     }
     private void startRealtime(String deviceId) {
@@ -184,14 +216,19 @@ public class HomeFragment extends Fragment {
         mViewModel.setLogged();
         if(mViewModel.islogged()){
             FirebaseUser user=mViewModel.getCurrentUser();
-            nameProfile.setText(user.getDisplayName());
-            if(user.getPhotoUrl()!=null){
-                Glide.with(this)
-                        .load(user.getPhotoUrl())
-                        .placeholder(R.drawable.outline_person_24)
-                        .error(R.drawable.outline_person_24)
-                        .into(profilePhoto);
+            if(user.getDisplayName()!=null){
+                nameProfile.setText(user.getDisplayName());
+                if(user.getPhotoUrl()!=null){
+                    Glide.with(this)
+                            .load(user.getPhotoUrl())
+                            .placeholder(R.drawable.outline_person_24)
+                            .error(R.drawable.outline_person_24)
+                            .into(profilePhoto);
+                }
+            }else {
+                nameProfile.setText("-");
             }
+
         }
 
     }

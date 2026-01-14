@@ -7,6 +7,8 @@ import androidx.lifecycle.LiveData;
 
 import com.example.dispenser.data.model.Dispenser;
 
+import java.util.List;
+
 public class DispenserRepository {
     // Di DispenserRepository.java
 
@@ -16,9 +18,7 @@ public class DispenserRepository {
 
     public DispenserRepository() {
     }
-// ... (Firebase services)
 
-    // Anggap DispenserRepository diinisialisasi dengan Room Database
     public DispenserRepository(Application application) {
         DispenserDatabase db = DispenserDatabase.getDatabase(application);
         dispenserDao = db.dispenserDao();
@@ -28,12 +28,10 @@ public class DispenserRepository {
         // ... inisialisasi Firebase
     }
 
-    // Method untuk menyimpan Dispenser ke Room
     public void insertDispenser(Dispenser dispenser) {
         // Jalankan operasi Room di background thread
         DispenserDatabase.databaseWriteExecutor.execute(() -> {
-            // Room akan secara otomatis menginsert/mengganti data
-            // jika kamu menggunakan @Insert(onConflict = OnConflictStrategy.REPLACE) di DAO.
+
             dispenserDao.insert(dispenser);
             Log.d("Repo", "Dispenser " + dispenser.getDeviceName() + " berhasil disimpan ke Room.");
         });
@@ -42,11 +40,7 @@ public class DispenserRepository {
         local.saveSelectedDispenserId(dispenserId);
     }
 
-    // Method yang digunakan oleh Home Fragment untuk membaca data
-//    public LiveData<Dispenser> getLastDispenser() {
-//        // Asumsi DAO punya query untuk mengambil data terakhir
-//        return dispenserDao.getLastUsedDispenser();
-//    }
+
     public String getDispenserLastId(){
         return local.getSelectedDispenserId();
 
@@ -69,5 +63,26 @@ public class DispenserRepository {
         remoteDataSource.setDispenserPower(deviceId, power);
     }
 
-// (Pastikan kamu sudah mengatur Executor/Coroutines untuk menjalankan operasi Room)
+    public void savePresetToFirestore(String name, int vA, int vB, String liquidA, String liquidB) {
+        remoteDataSource.savePresetToFirestore(name, vA, vB, liquidA, liquidB);
+    }
+
+    public LiveData<List<PresetModel>> getAllPresets() {
+        return remoteDataSource.getAllPresets();
+    }
+
+    public void updateSelectedRecipe(String deviceId, String namePresets, String liquidA, String liquidB, int volumeA, int volumeB) {
+        remoteDataSource.updateSelectedRecipe(deviceId, namePresets, liquidA, liquidB, volumeA, volumeB);
+    }
+
+    public void updateBottleCount(String deviceId, int bottleCount) {
+        remoteDataSource.updateBottleCount(deviceId, bottleCount);
+    }
+    public void updateTankHeightA(String deviceId, int height) {
+        remoteDataSource.updateTankHeightA(deviceId,height);
+    }
+    public void updateTankHeightB(String deviceId, int height) {
+        remoteDataSource.updateTankHeightB(deviceId,height);
+    }
+
 }
