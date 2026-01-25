@@ -116,8 +116,7 @@ public class DispenserFragment extends Fragment {
             int anchorX = location[0];
             int anchorY = location[1] + view.getHeight();
 
-            Toast.makeText(requireContext(), "WOI MASOK.", Toast.LENGTH_LONG).show();
-
+            Log.d("DEBUG_DISPENSER", "WOI MASOK.");
             AddDispenserFragment listDispenserFragment = new AddDispenserFragment(anchorX, anchorY);
             int width = view.getWidth();
             int height = view.getHeight();
