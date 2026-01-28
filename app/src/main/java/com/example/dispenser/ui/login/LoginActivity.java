@@ -84,7 +84,7 @@ public class LoginActivity extends AppCompatActivity {
                     // Opsi: Bersihkan back stack agar pengguna tidak bisa kembali ke halaman registrasi
                     startActivity(intent);
                     Log.d("DEBUG", "onClick: cok");
-                    Toast.makeText(getApplicationContext(), "LOGIN berhasil! Silakan login.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "LOGIN berhasil.", Toast.LENGTH_LONG).show();
                     finish();
                 }else{
                     Log.d("DEBUG", "onClick: cok");
