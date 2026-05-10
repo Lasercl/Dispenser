@@ -55,7 +55,10 @@ An Android application designed to monitor and control an automatic liquid dispe
 
 ## Screenshots
 
-*(Add screenshots here after implementation)*
+<img width="1920" height="880" alt="image" src="https://github.com/user-attachments/assets/e8d07074-c25a-4fbd-9700-9aeb9b0cf0bb" />
+<img width="1920" height="879" alt="image" src="https://github.com/user-attachments/assets/217ea39e-f4d3-4d6a-bd73-bbb5f71cdf4a" />
+<img width="1920" height="876" alt="image" src="https://github.com/user-attachments/assets/cc0b8037-8af8-4e41-a09a-b601c6c98c9a" />
+
 
 ---
 Developed as a tool for managing smart liquid dispensing systems.
